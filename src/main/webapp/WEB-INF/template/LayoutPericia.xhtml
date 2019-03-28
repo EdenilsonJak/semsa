@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</f:facet>
+
+	<title>ERP - SEMSA</title>
+
+	<h:outputStylesheet library="ejsistemas" name="styles/custom.css" />
+	<h:outputStylesheet library="ejsistemas" name="styles/layout.css" />
+	<h:outputStylesheet library="ejsistemas" name="styles/components.css" />
+	<h:outputStylesheet library="ejsistemas"
+		name="styles/font-awesome.min.css" />
+
+	<h:outputScript target="body" library="ejsistemas"
+		name="javascripts/app.js" />
+	<h:outputScript target="body" library="ejsistemas"
+		name="javascripts/locale.js" />
+
+</h:head>
+
+<h:body>
+	<p:ajaxStatus styleClass="ajax-status">
+		<f:facet name="start">
+			<h:graphicImage library="ejsistemas" name="images/wait.gif" />
+		</f:facet>
+		<f:facet name="complete">
+			<h:outputText value="" />
+		</f:facet>
+	</p:ajaxStatus>
+	<header class="aw-topbar">
+		<h:link outcome="/Home">
+			<h:graphicImage name="images/logo.png" library="ejsistemas" />
+		</h:link>
+
+		<a href="#" class="aw-toggle js-toggle"><i class="fa fa-bars" /></a>
+		<div style="float: right; margin-right: 30px">
+			<span
+				style="float: left; height: 47px; line-height: 47px; margin-right: 30px">
+				<p:link value="Sair" href="/j_spring_security_logout"
+					style="color: #ffffff;" />
+			</span>
+		</div>
+	</header>
+
+	<aside class="aw-sidebar  js-sidebar">
+
+		<nav class="aw-menu">
+
+			<p:accordionPanel>
+
+				<p:tab title="Cadastros" closable="true">
+					<h:panelGrid>
+						<p:link outcome="/pericia/medico/CadastroMedico">
+							<i class="fa  fa-fw fa-user-md"></i>
+							<h:outputText value="Cadastro de Médicos" />
+						</p:link>
+						<p:link outcome="/pericia/paciente/CadastroPacientes">
+							<i class="fa  fa-fw fa-users"></i>
+							<h:outputText value="Cadastro de Pacientes" />
+						</p:link>
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab title="Registrar demandas">
+					<h:panelGrid>
+						<p:link outcome="/pericia/registros/DemandaPericia">
+							<i class="fa  fa-fw fa-hospital-o"></i>
+							<h:outputText value="Receber Laudos" />
+						</p:link>
+						<p:link outcome="/pericia/registros/EntregarLaudos">
+							<i class="fa  fa-fw fa-hospital-o"></i>
+							<h:outputText value="Entrega de Laudos" />
+						</p:link>
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab title="Consultas e Relatórios">
+					<h:panelGrid>
+						<p:link outcome="/pericia/registros/RelatorioPorPeriodo">
+							<i class="fa  fa-fw fa-file-pdf-o"></i>
+							<h:outputText value="Relatório demanda Período" />
+						</p:link>
+					</h:panelGrid>
+				</p:tab>
+
+			</p:accordionPanel>
+
+		</nav>
+
+	</aside>
+
+	<section class="aw-content  js-content">
+		<h2 class="aw-page-title">
+			<ui:insert name="head" />
+		</h2>
+		<ui:insert name="content" />
+		<div class="usuario-logado">
+			<h4>Usuário Logado: #{seguranca.nomeUsuario}!</h4>
+		</div>
+		<footer class="rodape">
+			<div class="social-icons">
+				<a href="https://twitter.com/edenilsonjak" target="_blank"><i
+					class="fa fa-twitter"></i></a> <a
+					href="https://br.linkedin.com/in/edenilson-mendonça-dos-santos-05575a37"
+					target="_blank"><i class="fa fa-linkedin"></i></a> <a href="#"><i
+					class="fa fa-instagram"></i></a> <a href="http://google.com"
+					target="_blank"><i class="fa fa-google"></i></a>
+				<p>
+					<span class="copyright">Copyrigth @ SEMSA - 2018. Direitos
+						reservados.</span> <span class="versao">versão banco: v1.</span>
+				</p>
+			</div>
+		</footer>
+	</section>
+
+</h:body>
+
+</html>

@@ -1,0 +1,46 @@
+<ui:composition template="/WEB-INF/template/LayoutLicitacao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<f:metadata>
+		<o:viewParam name="requisicao"
+			value="#{cadastroRequisicaoBean.requisicao}" />
+		<f:viewAction action="#{cadastroRequisicaoBean.inicializar}"/>
+	</f:metadata>
+
+	<ui:define name="head">#{cadastroRequisicaoBean.editando ? "Requisição e Contratos" : "Nova Requisição"}</ui:define>
+
+	<ui:define name="content">
+		<h:form id="frmRequisicao" target="_blank">
+
+			<p:messages autoUpdate="true" closable="true" />
+
+			<ui:include src="/WEB-INF/requisicoes/BotoesRequisicao.xhtml" />
+			<div class="ui-fluid"
+				style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+				<ui:include src="CapaRequisicao.xhtml" />
+				<ui:include src="Dialog.xhtml" />
+
+				<p:tabView style="margin-top: 20px" styleClass="tabWidget"
+					dynamic="true"	>
+					<p:tab title="Itens">
+						<ui:include
+							src="ItensRequisicoes.xhtml" />
+					</p:tab>
+
+					<p:tab title="Observação">
+						<ui:include
+							src="ObservacaoRequisicao.xhtml" />
+					</p:tab>
+
+				</p:tabView>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

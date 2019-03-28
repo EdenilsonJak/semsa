@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form>
+		<p:messages autoUpdate="true" closable="true" />
+		<p:toolbar>
+			<p:toolbarGroup>
+				<p:commandButton value="Pesquisar" icon="pesquisar-icon" update="@form"
+					action="#{pesquisaFornecedorBean.pesquisarHospitais}"/>
+			</p:toolbarGroup>
+			<p:toolbarGroup align="right">
+				<p:button value="Novo" icon="novo-icon"
+					outcome="/internacao/hospital/CadastroHospital" />
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<div class="ui-fluid" style="margin-top: 20px">
+			<p:panelGrid columns="2" id="painel" layout="grid"
+				columnClasses="ui-grid-col-1, ui-grid-col-6"
+				styleClass="panelgrid-noborder">
+				<p:outputLabel value="Nome Hospital" for="hnome" />
+				<p:inputText id="hnome" size="60" value="#{pesquisaFornecedorBean.fornecedorFilter.fornecedor}"/>
+				
+				<p:outputLabel value="CNPJ" for="ccnpj" />
+				<p:inputText id="ccnpj" size="60" value="#{pesquisaFornecedorBean.fornecedorFilter.CNPJ}"/>
+				
+			</p:panelGrid>
+		</div>
+
+		<p:dataTable id="hospitaisTable" var="hospital" value="#{pesquisaFornecedorBean.fornecedoresFiltrados}"
+			style="margin-top: 20px" emptyMessage="Nenhum hospital encontrado."
+			rows="20" paginator="true" paginatorAlwaysVisible="false" rowIndexVar="linha"
+			paginatorPosition="bottom">
+			<f:facet name="header">
+				Lista de hospitais
+			</f:facet>
+			<p:column headerText="Nome Hospital">
+				<h:outputText value="#{hospital.fornecedor}"/>
+			</p:column>
+			<p:column headerText="Cnpj">
+				<h:outputText value="#{hospital.cnpjFormatado}"/>
+			</p:column>
+			<p:column headerText="cep">
+				<h:outputText value="#{hospital.cepFormatado}"/>
+			</p:column>
+			<p:column style="width: 100px; text-align: center">
+				<p:commandButton icon="editar-icon" title="Editar" process="@this"
+				action="#{cadastroFornecedorBean.receberFornecedor(hospital, linha)}"/>
+				
+				<p:commandButton icon="delete-icon" title="Excluir"
+					oncomplete="confirmacaoExclusao.show()" />
+			</p:column>
+			<f:facet name="footer">
+				<h:outputText value="Existem "/>
+				<h:outputText value="#{fn:length(pesquisaFornecedorBean.fornecedoresFiltrados)}"/>
+				<h:outputText value=" Hospitais encontrados "/>
+			</f:facet>
+		</p:dataTable>
+
+		<p:confirmDialog header="Exclusão de produto"
+			message="Tem certeza que deseja excluir o produto?"
+			widgetVar="confirmacaoExclusao">
+			<p:button value="Não"
+				onclick="confirmacaoExclusao.hide(); return false;" />
+			<p:commandButton value="Sim" oncomplete="confirmacaoExclusao.hide();" />
+		</p:confirmDialog>
+	</h:form>
+
+</ui:composition>

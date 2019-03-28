@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="4" layout="grid"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+		styleClass="panelgrid-noborder">
+		<p:outputLabel value="Data de Publicação" for="dataPublicacao" />
+		<p:calendar id="dataPublicacao" pattern="dd/MM/yyyy"
+			value="#{cadastroLicitacaoBean.licitacao.dt_publicacao}"
+			disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}" />
+
+		<p:outputLabel value="Tipo de Publicação" for="publicacao" />
+		<p:autoComplete dropdown="true" id="publicacao"
+			value="#{cadastroLicitacaoBean.licitacao.publicacao}"
+			completeMethod="#{cadastroLicitacaoBean.completarPublicacao}"
+			var="publicacao" itemLabel="#{publicacao.nome}"
+			itemValue="#{publicacao}" forceSelection="true"
+			disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}">
+		</p:autoComplete>
+
+		<p:outputLabel value="Número" for="numeroPublicacao" />
+		<p:inputText id="numeroPublicacao"
+			value="#{cadastroLicitacaoBean.licitacao.nr_publicacao}"
+			disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}" />
+
+		<p:outputLabel value="Nome Periódico" for="nomePeriodico" />
+		<p:inputText id="nomePeriodico"
+			onkeyup="this.value = this.value.toUpperCase()"
+			value="#{cadastroLicitacaoBean.licitacao.nomePeriodico}"
+			disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}" />
+
+	</p:panelGrid>
+
+</ui:composition>

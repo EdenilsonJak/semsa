@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<div class="ui-fluid"
+		style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+		<p:panelGrid columns="4" layout="grid" id="grid_panel_judicial"
+			columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+			styleClass="panelgrid-noborder">
+
+			<p:outputLabel value="Código" rendered="false" />
+			<p:inputText value="#{cadastroRequisicoesRecepcao.receituario.id}"
+				rendered="false" disabled="false" />
+
+			<p:outputLabel value="Paciente:" for="paciente" />
+			<p:autoComplete id="paciente" maxResults="15" converter="pacienteConverter"
+				placeholder="Pesquisa por nome e cartão SUS" 
+				value="#{cadastroRequisicoesRecepcao.receituario.paciente}"
+				completeMethod="#{cadastroRequisicoesRecepcao.pesquisaPaciente}"
+				var="paciente" itemLabel="#{paciente.nome}"
+				itemValue="#{paciente}" forceSelection="true">
+				<p:ajax event="itemSelect"  listener="#{cadastroRequisicoesRecepcao.atualizarComponente}"
+				process="@this" ignoreAutoUpdate="true"/>
+				<p:column>
+						<h:outputText value="#{paciente.nome}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{paciente.dt_nascimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{paciente.sus}" />
+					</p:column>
+			</p:autoComplete>
+
+			<p:outputLabel value="Data de Nascimento"/>
+			<p:calendar size="6" mask="true" disabled="true" pattern="dd/MM/yyyy"
+				locale="pt_BR" value="#{cadastroRequisicoesRecepcao.receituario.paciente.dt_nascimento}">
+			</p:calendar>
+			
+			<p:outputLabel value="Nome Mãe"/>
+			<p:inputText value="#{cadastroRequisicoesRecepcao.receituario.paciente.nome_mae}"
+				disabled="true"/>
+				
+			<p:outputLabel value="Cartão SUS"/>
+			<p:inputText value="#{cadastroRequisicoesRecepcao.receituario.paciente.sus}"
+				disabled="true"/>	
+
+		</p:panelGrid>
+
+	</div>
+</ui:composition>

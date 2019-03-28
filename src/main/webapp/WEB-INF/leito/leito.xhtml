@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmLeito" prependId="false">
+		<p:messages autoUpdate="true" closable="true" />
+
+		<p:toolbar>
+			<p:toolbarGroup>
+				<p:button value="Novo" icon="novo-icon"
+					outcome="/internacao/leito/CadastroLeitos" />
+				<p:commandButton value="Salvar" icon="salvar-icon" action="#{cadastroLeitoBean.salvar}" disabled="#{not seguranca.cadastroUsuarios}" 
+				update="@form"/>
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<div class="ui-fluid" style="margin-top: 20px">
+			<p:panelGrid columns="4" layout="grid"
+				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="Nome Leito:" for="nome" />
+				<p:inputText id="nome" size="60" maxlength="80" required="true"
+				requiredMessage="Nome é obrigatório" onkeyup="this.value = this.value.toUpperCase()"
+				value="#{cadastroLeitoBean.leito.nome}" />
+				
+				<p:outputLabel value="Descrição Leito:" for="descricao" />
+				<p:inputText id="descricao" size="60" maxlength="80" onkeyup="this.value = this.value.toUpperCase()"
+				value="#{cadastroLeitoBean.leito.descricao}" />
+
+				<p:outputLabel value="Masculino/Feminino" for="sexo" />
+				<p:selectOneMenu id="sexo" value="#{cadastroLeitoBean.leito.sexo}">
+					<f:selectItem itemLabel="Selecione o sexo..." noSelectionOption="true"/>
+					<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+					<f:selectItem itemLabel="Feminino" itemValue="Feminino" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Hospital" for="hospital" />
+				<p:selectOneMenu id="hospital" required="true" converter="fornecedorConverter"
+					requiredMessage="Selecione hospital, por favor!" filter="true" filterMatchMode="contains"
+					value="#{cadastroLeitoBean.leito.hospital}">
+					<f:selectItem itemLabel="Selecione Hospital.." noSelectionOption="true"/>
+					<f:selectItems value="#{cadastroLeitoBean.fornecedores}"
+					itemValue="#{hospital}" var="hospital" itemLabel="#{hospital.fantasia}"/>
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Clínica" for="clinica" />
+				<p:selectOneMenu id="clinica" required="true"
+					value="#{cadastroLeitoBean.leito.clinica}">
+					<f:selectItem itemLabel="Selecione Clínica" noSelectionOption="true"/>
+					<f:selectItems value="#{cadastroLeitoBean.clinicas}"
+					var="clinica" itemValue="#{clinica}" itemLabel="#{clinica.nome}"/>
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Responsável Médico" for="medico_resp" />
+				<p:selectOneMenu id="medico_resp"
+					converter="medicoConverter"
+					filter="true" filterMatchMode="contains"
+					value="#{cadastroLeitoBean.leito.medico}">
+					<f:selectItem itemLabel="Selecione.." noSelectionOption="true" />
+					<f:selectItems value="#{cadastroLeitoBean.medicos}"
+					 var="medico" itemLabel="#{medico.nome}" itemValue="#{medico}"/>
+				</p:selectOneMenu>
+
+			</p:panelGrid>
+		</div>
+	</h:form>
+
+
+</ui:composition>

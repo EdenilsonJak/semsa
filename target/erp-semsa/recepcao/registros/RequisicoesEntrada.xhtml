@@ -1,0 +1,49 @@
+<ui:composition template="/WEB-INF/template/LayoutRecepcao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<f:metadata>
+		<f:viewAction action="#{cadastroRequisicoesRecepcao.inicializarRecepcaoRequisicao}"/>
+	</f:metadata>
+
+	<ui:define name="head">
+		Registro de marcação de consultas e encaminhamentos
+	</ui:define>
+	<ui:define name="content">
+	
+		<h:form id="frmRecepcao" prependId="false">
+			<p:messages autoUpdate="false" closable="true" id="msg" />
+			<p:toolbar id="bar">
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="novo-icon"
+						outcome="/recepcao/registros/RequisicoesEntrada" />
+					<p:commandButton value="Salvar" icon="salvar-icon"
+						disabled="#{seguranca.acessoVisitante}" action="#{cadastroRequisicoesRecepcao.salvar}"
+						update="frmRecepcao" process="@this paciente dataItem " />
+				</p:toolbarGroup>
+			</p:toolbar>
+	
+			<ui:include src="/WEB-INF/recepcao/CapaReceituario.xhtml"/>
+	
+			<div class="ui-fluid"
+				style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+					<ui:include src="/WEB-INF/recepcao/PanelItens.xhtml"/>
+			</div>
+	
+			<p:commandButton action="#{cadastroRequisicoesRecepcao.adicionarItemRequisicao}" 
+				icon="addPasta-icon"	
+				value="Incluir"	update="dataItem panel prioridadeGroup msg grid_panel_judicial"/>
+			
+			<br>
+				<p:spacer />
+			</br>
+	
+			<ui:include src="/WEB-INF/recepcao/TabelaItens.xhtml"/>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

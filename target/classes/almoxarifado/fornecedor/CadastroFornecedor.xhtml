@@ -1,0 +1,159 @@
+<ui:composition template="/WEB-INF/template/LayoutAlmoxarifado.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:define name="head">
+		#{cadastroFornecedorBean.fornecedor.novo ? "Cadastro de Fornecedores" : "Editando Fornecedor"}
+	</ui:define>
+	<ui:define name="content">
+
+		<f:metadata>
+			<o:viewParam name="fornecedor"
+				value="#{cadastroFornecedorBean.fornecedor}" />
+
+			<f:event listener="#{cadastroFornecedorBean.inicializar}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+
+		<h:form id="frmCadastroFornecedor" prependId="false">
+			<p:messages autoUpdate="true" closable="true" />
+
+			<p:toolbar id="toolbar_botoes">
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="novo-icon"
+						outcome="/almoxarifado/fornecedor/CadastroFornecedor" />
+					<p:commandButton value="Cadastrar" id="botaoSalvar"
+						icon="salvar-icon"
+						rendered="#{cadastroFornecedorBean.fornecedor.novo}"
+						action="#{cadastroFornecedorBean.salvar}" update="@form" />
+					<p:commandButton value="Atualizar" id="botaoAtualizar"
+						icon="atualizar-icon"
+						rendered="#{not cadastroFornecedorBean.fornecedor.novo}"
+						action="#{cadastroFornecedorBean.salvar}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="pesquisar-icon"
+						outcome="/almoxarifado/fornecedor/PesquisaFornecedores" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+
+			<div class="ui-fluid" style="margin-top: 20px">
+				<p:panelGrid columns="4" layout="grid" id="grid_fornecedor"
+					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+					styleClass="panelgrid-noborder">
+
+					<p:outputLabel value="CNPJ" for="cnpj" />
+					<p:inputMask mask="99.999.999/9999-99" size="14" id="cnpj"
+						converter="app.numbersConverter" required="true"
+						value="#{cadastroFornecedorBean.fornecedor.cnpj}">
+					</p:inputMask>
+
+					<p:outputLabel value="Insc. Estadual" for="estadual" />
+					<p:inputMask size="14" id="estadual"
+						value="#{cadastroFornecedorBean.fornecedor.insc_estadual}">
+					</p:inputMask>
+
+					<p:outputLabel value="Razão Social" for="nome" />
+					<p:inputText id="nome" size="70" maxlength="80" required="true"
+						value="#{cadastroFornecedorBean.fornecedor.fornecedor}" onkeyup="this.value = this.value.toUpperCase()">
+					</p:inputText>
+
+					<p:outputLabel value="CEP" for="cep" />
+					<p:inputMask mask="99.999-999" id="cep" required="true"
+						style="width : 40%" converter="app.numbersConverter"
+						value="#{cadastroFornecedorBean.fornecedor.cep}" size="7">
+						<p:ajax event="change" process="@this"
+							listener="#{cadastroFornecedorBean.consultaCep}"
+							update="endereco bairro estado cidade logradouro" />
+					</p:inputMask>
+
+					<p:outputLabel value="Nome Fantasia" for="fantasia" />
+					<p:inputText id="fantasia" size="70"
+						value="#{cadastroFornecedorBean.fornecedor.fantasia}" onkeyup="this.value = this.value.toUpperCase()">
+					</p:inputText>
+
+					<p:outputLabel value="Logradouro" for="logradouro" />
+					<p:inputText id="logradouro" onkeyup="this.value = this.value.toUpperCase()"
+						value="#{cadastroFornecedorBean.fornecedor.tipoLogradouro}"
+						required="true" />
+
+					<p:outputLabel value="Endereço" for="endereco" />
+					<p:inputText id="endereco" size="70" required="true" onkeyup="this.value = this.value.toUpperCase()"
+						value="#{cadastroFornecedorBean.fornecedor.logradouro}" />
+
+					<p:outputLabel value="Número" for="numero" />
+					<p:inputText id="numero" size="5"
+						value="#{cadastroFornecedorBean.fornecedor.numero}">
+					</p:inputText>
+
+					<p:outputLabel value="Bairro" for="bairro" />
+					<p:inputText id="bairro" size="70" required="true" onkeyup="this.value = this.value.toUpperCase()"
+						value="#{cadastroFornecedorBean.fornecedor.bairro}" />
+
+					<p:outputLabel value="Perimetro" for="perimetro" />
+					<p:inputText id="perimetro" size="70" onkeyup="this.value = this.value.toUpperCase()"
+						value="#{cadastroFornecedorBean.fornecedor.perimetro}" />
+
+					<p:outputLabel value="Estado" for="estado" />
+					<p:inputText id="estado" onkeyup="this.value = this.value.toUpperCase()"
+						value="#{cadastroFornecedorBean.fornecedor.estado}" />
+
+					<p:outputLabel value="Cidade" for="cidade" />
+					<p:inputText id="cidade" onkeyup="this.value = this.value.toUpperCase()"
+						value="#{cadastroFornecedorBean.fornecedor.cidade}" />
+
+					<p:outputLabel value="Telefone" for="telefone" />
+					<p:inputMask mask="(99)-9999-9999" id="telefone" size="10" converter="app.numbersConverter"
+						value="#{cadastroFornecedorBean.fornecedor.phone}" />
+
+					<p:outputLabel value="Fax" for="fax" />
+					<p:inputMask mask="(99)-9999-9999" id="fax" size="10" converter="app.numbersConverter"
+						value="#{cadastroFornecedorBean.fornecedor.fax}" />
+
+					<p:outputLabel value="Celular" for="celular" />
+					<p:inputMask mask="(99)-99999-9999" id="celular" size="10" converter="app.numbersConverter"
+						value="#{cadastroFornecedorBean.fornecedor.celular}" />
+
+				</p:panelGrid>
+			</div>
+
+			<p:dataTable value="#{cadastroFornecedorBean.fornecedores}"
+				emptyMessage="Nenhum Cliente encontrado." rows="15"
+				rowIndexVar="rowIndex" paginator="true" 
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				var="fornecedor" id="fornecedor" selectionMode="single"
+				selection="#{cadastroFornecedorBean.fornecedorEdicao}"
+				rowKey="#{fornecedor.id}" reflow="true" style="margin-top: 20px">
+				<f:facet name="header">
+					Lista de Fornecedores
+				</f:facet>
+				<p:ajax event="rowSelect" process="@this"
+					listener="#{cadastroFornecedorBean.onSelect}"
+					update="grid_fornecedor toolbar_botoes" />
+				<p:column headerText="Razão Social:"
+					filterBy="#{fornecedor.fornecedor}">
+					<h:outputText value="#{fornecedor.fornecedor}" />
+				</p:column>
+				<p:column headerText="Fantasia:" filterBy="#{fornecedor.fantasia}">
+					<h:outputText value="#{fornecedor.fantasia}" />
+				</p:column>
+				<p:column headerText="Cnpj">
+					<h:outputText value="#{fornecedor.cnpjFormatado}" />
+				</p:column>
+				<f:facet name="footer">
+					<h:outputText value="Existem " />
+					<h:outputText
+						value="#{fn:length(cadastroFornecedorBean.fornecedores)}" />
+					<h:outputText value=" produtos cadastrados. " />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

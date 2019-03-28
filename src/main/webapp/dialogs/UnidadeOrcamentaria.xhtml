@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	
+	<title>Seleção Unidade Orçamentaria</title>
+
+	<h:outputStylesheet library="ejsistemas" name="styles/custom.css" />
+	<h:outputStylesheet library="ejsistemas" name="styles/layout.css" />
+	<h:outputStylesheet library="ejsistemas" name="styles/components.css" />
+	<h:outputStylesheet library="ejsistemas" name="styles/font-awesome.min.css"/>
+
+	<h:outputScript target="body" library="primefaces"
+		name="jquery/jquery.js" />
+	<h:outputScript target="body" library="ejsistemas"
+		name="javascripts/app.js" />
+	
+	<style>
+		body{
+			margin: 10px
+		}
+	</style>
+
+
+</h:head>
+
+<h:body>
+	<h:form>
+		<div style="margin-top: 5px">
+			<p:inputText id="nome" size="40" placeholder="Nome Unidade ou Código" value="#{selecaoUnidadeOrcamentaria.nome}"/>
+			<p:spacer/>
+			<p:spacer/>			
+			<p:commandButton value="Pesquisar" update="@form" action="#{selecaoUnidadeOrcamentaria.pesquisar}"/>
+		</div>
+		
+		<p:dataTable var="unidade" style="margin-top : 20px" emptyMessage="Nenhuma unidade encontrada" 
+			paginatorPosition="bottom" paginator="true" value="#{selecaoUnidadeOrcamentaria.unidadeOrcamentariasFiltrados}">
+			<p:column headerText="Código" style="text-align: center; width: 5px">
+				<h:outputText value="#{unidade.id}"/>
+			</p:column>
+			<p:column headerText="Nome" style="text-align: center; width: 55px">
+				<h:outputText value="#{unidade.nome}"/>
+			</p:column>
+			<p:column style="width: 5px; text-align: center">
+				<p:commandButton icon="ui-icon-check" title="Selecionar"
+				process="@this" action="#{selecaoUnidadeOrcamentaria.selecionar(unidade)}"/>				
+			</p:column>
+		</p:dataTable>
+	
+	</h:form>
+
+</h:body>
+</html>

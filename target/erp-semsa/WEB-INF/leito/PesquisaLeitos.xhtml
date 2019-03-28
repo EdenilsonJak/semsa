@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form>
+		<p:messages autoUpdate="true" closable="true" />
+		<p:toolbar>
+			<p:toolbarGroup>
+				<p:commandButton value="Pesquisar" icon="pesquisar-icon"
+					update="@form" action="#{pesquisaLeitoBean.pesquisar}" />
+			</p:toolbarGroup>
+			<p:toolbarGroup align="right">
+				<p:button value="Novo" icon="novo-icon"
+					outcome="/internacao/leito/CadastroLeitos" />
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<div class="ui-fluid" style="margin-top: 20px">
+			<p:panelGrid columns="2" id="painel" layout="grid"
+				columnClasses="ui-grid-col-2, ui-grid-col-5"
+				styleClass="panelgrid-noborder">
+				
+				<p:outputLabel value="Hospital:" for="hospital" />
+				<p:selectOneMenu id="hospital" value="#{pesquisaLeitoBean.leitoFilter.fornecedor}"
+					converter="fornecedorConverter">
+					<f:selectItem itemLabel="Selecione Hospital..." noSelectionOption="true"/>
+					<f:selectItems value="#{pesquisaLeitoBean.fornecedors}" var="hospital" itemLabel="#{hospital.fantasia}"
+					itemValue="#{hospital}"/>
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Clínica:" for="clinica" />
+				<p:selectOneMenu id="clinica" value="#{pesquisaLeitoBean.leitoFilter.clinica}">
+					<f:selectItem itemLabel="Selecione Clínica..." noSelectionOption="true"/>
+					<f:selectItems value="#{pesquisaLeitoBean.clinicas}" var="leito"
+					itemLabel="#{leito.nome}" itemValue="#{leito}"/>
+				</p:selectOneMenu>
+				
+				<p:outputLabel value="Nome Leito:" for="nome" />
+				<p:inputText id="nome" size="60" maxlength="80"
+				value="#{pesquisaLeitoBean.leitoFilter.nome}" />
+				
+				<p:outputLabel value="Descrição Leito:" for="descricao" />
+				<p:inputText id="descricao" size="60" maxlength="80"
+				value="#{pesquisaLeitoBean.leitoFilter.descricao}" />
+
+				<p:outputLabel value="Masculino/Feminino:" for="sexo" />
+				<p:selectOneMenu id="sexo" value="#{pesquisaLeitoBean.leitoFilter.sexo}">
+					<f:selectItem itemLabel="Selecione o sexo..." noSelectionOption="true"/>
+					<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+					<f:selectItem itemLabel="Feminino" itemValue="Feminino" />
+				</p:selectOneMenu>
+
+			</p:panelGrid>
+		</div>
+
+		<p:dataTable id="pacientesTable" var="leito"
+			value="#{pesquisaLeitoBean.leitos}" style="margin-top: 20px"
+			emptyMessage="Nenhum leito encontrado." rows="20" paginator="true"
+			paginatorAlwaysVisible="false" paginatorPosition="bottom">
+			<f:facet name="header">
+						Resultado de leitos pesquisados
+			</f:facet>
+			<p:column headerText="Hospital" style="text-align: center"
+				filterBy="#{leito.hospital.fornecedor}">
+				<h:outputText value="#{leito.hospital.fornecedor}"/>
+			</p:column>
+			<p:column headerText="Clínica" style="text-align: center"
+				filterBy="#{leito.clinica.nome}">
+				<h:outputText value="#{leito.clinica.nome}"/>
+			</p:column>
+			<p:column headerText="Leito" style="text-align: center"
+				filterBy="#{leito.nome}">
+				<h:outputText value="#{leito.nome}"/>
+			</p:column>
+			<p:column headerText="Masculino/Femenino" style="text-align: center" priority="4">
+				<h:outputText value="#{leito.sexo}" />
+			</p:column>
+			<p:column headerText="Situação Leito" style="text-align: center"
+				filterBy="#{leito.status}">
+				<h:outputText value="#{leito.status}" style="#{leito.internado ? 'color : red' : 'color : blue'}"/>
+			</p:column>
+			<p:column style="width: 100px; text-align: center">
+				<p:button icon="editar-icon" title="Editar">
+					<f:param name="leito" value="#{leito.id}" />
+				</p:button>
+				<p:commandButton icon="delete-icon" title="Excluir"
+					oncomplete="confirmacaoExclusao.show()" />
+			</p:column>
+			<f:facet name="footer">
+				<h:outputText value="Existem "/>
+				<h:outputText value="#{fn:length(pesquisaLeitoBean.leitos)}"/>
+				<h:outputText value=" Leitos encontrados"/>
+			</f:facet>
+			
+		</p:dataTable>
+
+		<p:confirmDialog header="Exclusão de produto"
+			message="Tem certeza que deseja excluir o produto?"
+			widgetVar="confirmacaoExclusao">
+			<p:button value="Não"
+				onclick="confirmacaoExclusao.hide(); return false;" />
+			<p:commandButton value="Sim" oncomplete="confirmacaoExclusao.hide();" />
+		</p:confirmDialog>
+	</h:form>
+
+</ui:composition>

@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<p:dialog showEffect="drop" hideEffect="clip" height="300"
+		header="#{pesquisaRequisicoesRecepcao.marcar ? 'Marcação de Solicitação' : 'Cancelar Solicitação'}"
+		widgetVar="requisicaoDialog" id="dialogRequisicao" resizable="false"
+		responsive="true">
+	<p:ajax event="close" listener="#{pesquisaRequisicoesRecepcao.limpar}"/>
+
+		<h:panelGroup id="requisicaoDialogPanel">
+			<p:messages autoUpdate="false" id="msgDialog" />
+
+			<div class="ui-fluid"
+				style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+				<p:panelGrid columns="4" layout="grid" id="grid_panel_dialog"
+					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+					styleClass="panelgrid-noborder">
+
+					<p:outputLabel value="Nome Paciente:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{pesquisaRequisicoesRecepcao.itemReceituario.receituario.paciente.nome}" />
+						
+					<p:outputLabel value="Cartão SUS:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{pesquisaRequisicoesRecepcao.itemReceituario.receituario.paciente.sus}" />	
+
+					<p:outputLabel value="Data de Nascimento:"
+						style="font-weight: bold;" />
+					<h:outputText
+						value="#{pesquisaRequisicoesRecepcao.itemReceituario.receituario.paciente.dt_nascimento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+
+					<p:outputLabel value="Data entrada:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{pesquisaRequisicoesRecepcao.itemReceituario.receituario.data}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="#{appBean.timeZone}"/>
+					</h:outputText>
+					
+					<p:outputLabel value="Data Requisição:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{pesquisaRequisicoesRecepcao.itemReceituario.dataRequisicao}">
+						<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>
+
+					<p:outputLabel value="Estabelecimento:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{pesquisaRequisicoesRecepcao.itemReceituario.unidadeSaude.nome}">
+					</h:outputText>
+
+					<p:outputLabel value="Solicitação:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{pesquisaRequisicoesRecepcao.itemReceituario.solicitacao.solicitaPai.descricao} - #{pesquisaRequisicoesRecepcao.itemReceituario.solicitacao.descricao}">
+					</h:outputText>
+
+				</p:panelGrid>
+
+				<p:outputLabel value="Observação de Entrada:"
+					style="font-weight: bold; margin-left: 10px" />
+				<p:inputTextarea rows="6" style="margin-top: 4px" disabled="true"
+					value="#{pesquisaRequisicoesRecepcao.itemReceituario.obs}"/>
+
+			</div>
+
+			<h:panelGroup id="obsMarcar"
+				rendered="#{pesquisaRequisicoesRecepcao.marcar}">
+				<p:outputLabel value="Observações para marcação:" for="observacoesMarcar" />
+				<p:inputTextarea rows="6" style="width: 98%; margin-top : 4px;"
+					value="#{pesquisaRequisicoesRecepcao.itemReceituario.obs_marcacao}"
+					id="observacoesMarcar" required="true"
+					requiredMessage="Observação é obrigatório" />
+			</h:panelGroup>
+
+			<h:panelGroup id="obsCancelar"
+				rendered="#{pesquisaRequisicoesRecepcao.cancelar}">
+				<p:outputLabel value="Observações para cancelar:" for="observacoesCancelar" />
+				<p:inputTextarea rows="6" style="width: 98%; margin-top : 4px;"
+					value="#{pesquisaRequisicoesRecepcao.itemReceituario.obs_cancelar}"
+					id="observacoesCancelar" required="true"
+					requiredMessage="Observação é obrigatório" />
+			</h:panelGroup>
+
+			<p:commandButton value="Marcar" process="dialogRequisicao"
+				icon="check-icon" rendered="#{pesquisaRequisicoesRecepcao.marcar}"
+				disabled="#{seguranca.acessoVisitante}"
+				update=":frmRecepcaoListaEpera:dataItem msgDialog obsMarcar"
+				oncomplete="if(args.sucesso == true) PF('requisicaoDialog').hide()"
+				action="#{pesquisaRequisicoesRecepcao.salvarMarcacao}"
+				onblur="PF('myWidgetVar').filter()" />
+
+			<p:commandButton value="Cancelar" process="dialogRequisicao"
+				icon="cancelar-icon" disabled="#{seguranca.acessoVisitante}"
+				rendered="#{pesquisaRequisicoesRecepcao.cancelar}"
+				update=":frmRecepcaoListaEpera:dataItem msgDialog obsCancelar "
+				oncomplete="if(args.sucesso == true) PF('requisicaoDialog').hide()"
+				action="#{pesquisaRequisicoesRecepcao.salvarCancelamento}"
+				onblur="PF('myWidgetVar').filter()" />
+
+		</h:panelGroup>
+	</p:dialog>
+
+</ui:composition>

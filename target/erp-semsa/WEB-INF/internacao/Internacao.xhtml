@@ -1,0 +1,302 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<h:form id="frmInternacao" prependId="false" target="_blank">
+		<p:messages autoUpdate="false" closable="true" id="msg" />
+
+		<p:toolbar id="bar">
+			<p:toolbarGroup>
+				<p:button value="Novo" icon="novo-icon"
+					outcome="/internacao/Internacao" />
+				<p:commandButton value="Internar" icon="internar-icon"
+					rendered="#{cadastroInternaBean.internacao.novo }"
+					action="#{cadastroInternaBean.salvar}" update="@form" />
+				<p:commandButton value="Transferir" icon="internar-icon"
+					rendered="#{cadastroInternaBean.transferivel}"
+					action="#{cadastroInternaBean.transferenciaPaciente}"
+					update="@form" />
+				<p:commandButton value="Cancelar" icon="internar-icon"
+					rendered="#{cadastroInternaBean.cancela}"
+					action="#{cancelamentoInternacaoBean.cancelarInternacao}"
+					update="@form" />
+				<p:commandButton value="Alta" icon="internar-icon"
+					rendered="#{cadastroInternaBean.alta}"
+					action="#{altaInternacaoBean.altaInternacaoPaciente}"
+					update="@form" />
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<div class="ui-fluid"
+			style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+			<p:panelGrid columns="4" layout="grid" id="grid_panel"
+				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="Chave:"
+					rendered="#{cadastroInternaBean.internacao.existente}" />
+				<p:inputText value="#{cadastroInternaBean.internacao.id}"
+					rendered="#{cadastroInternaBean.internacao.existente}"
+					disabled="#{not cadastroInternaBean.internacao.novo}" />
+
+				<p:outputLabel value="Hospital:" for="hospital" />
+				<p:autoComplete id="hospital" maxResults="15"
+					converter="fornecedorConverter"
+					placeholder="Pesquisa nome fantasia ou razão/social"
+					disabled="#{cadastroInternaBean.cancelavel or cadastroInternaBean.alta}"
+					completeMethod="#{cadastroInternaBean.pesquisaFornecedores}"
+					var="h" itemLabel="#{h.fantasia}" itemValue="#{h}" dropdown="true"
+					value="#{cadastroInternaBean.hospital}"
+					forceSelection="true">
+					<p:ajax event="itemSelect" process="@this" />
+				</p:autoComplete>
+
+				<p:outputLabel value="Clínica:" for="clinica" />
+				<p:selectOneMenu id="clinica" value="#{cadastroInternaBean.clinica}"
+					required="true"
+					disabled="#{cadastroInternaBean.cancelavel or cadastroInternaBean.alta}"
+					requiredMessage="Por favor, Clínica é Obrigatório"
+					valueChangeListener="#{cadastroInternaBean.buscarLeitosDisponiveis}">
+					<f:selectItem itemLabel="-- Selecione Clínica --"
+						noSelectionOption="true" />
+					<f:selectItems value="#{cadastroInternaBean.clinicas}" var="c"
+						itemValue="#{c}" itemLabel="#{c.nome}" />
+					<p:ajax process="@this" update="leito internacao msg" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Leito:" for="leito" />
+				<p:selectOneMenu id="leito" required="true"
+					disabled="#{cadastroInternaBean.cancelavel or cadastroInternaBean.alta}"
+					requiredMessage="Por favor, Leito é Obrigatório!"
+					value="#{cadastroInternaBean.internacao.leito}">
+					<f:selectItem itemLabel="-- Selecione Leito --"
+						noSelectionOption="true" />
+					<f:selectItems value="#{cadastroInternaBean.leitos}" var="leito"
+						itemValue="#{leito}" itemLabel="#{leito.nome}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Paciente:" for="paciente" />
+				<p:autoComplete id="paciente" maxResults="15"
+					converter="pacienteConverter"
+					placeholder="Pesquisa por nome e cartão SUS"
+					disabled="#{cadastroInternaBean.cancelavel or cadastroInternaBean.alta or cadastroInternaBean.transferivel}"
+					value="#{cadastroInternaBean.internacao.paciente}"
+					completeMethod="#{cadastroInternaBean.pesquisaPaciente}"
+					var="paciente" itemLabel="#{paciente.nome}" itemValue="#{paciente}"
+					forceSelection="true">
+					<p:ajax event="itemSelect" process="@this" />
+					<p:column>
+						<h:outputText value="#{paciente.nome}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{paciente.dt_nascimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{paciente.sus}" />
+					</p:column>
+				</p:autoComplete>
+
+				<p:outputLabel value="Médico Solicitante:" for="medico_solic" />
+				<p:selectOneMenu id="medico_solic" styleClass="oneMenu"
+					converter="medicoConverter"
+					disabled="#{cadastroInternaBean.cancelavel or cadastroInternaBean.alta}"
+					value="#{cadastroInternaBean.internacao.medicoSolicitante}"
+					filter="true">
+					<f:selectItem itemLabel="-- Selecione --" noSelectionOption="true" />
+					<f:selectItems var="m" itemValue="#{m}" itemLabel="#{m.nome}"
+						value="#{cadastroInternaBean.medicos}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Diagnóstico:" for="diagnostico" />
+				<p:autoComplete id="diagnostico"
+					disabled="#{cadastroInternaBean.cancelavel or cadastroInternaBean.alta or cadastroInternaBean.transferivel}"
+					value="#{cadastroInternaBean.internacao.cid}" maxResults="10"
+					converter="cidConverter" placeholder="Pesquisa por código ou nome"
+					styleClass="diagnostico"
+					completeMethod="#{cadastroInternaBean.pesquisaCid}" var="cid"
+					itemLabel="#{cid.descrabrev}" itemValue="#{cid}"
+					forceSelection="true" queryDelay="1000">
+				</p:autoComplete>
+
+
+				<p:outputLabel value="Motivo Cancelamento:" for="cancelar"
+					rendered="#{cadastroInternaBean.cancelavel}" />
+				<p:selectOneMenu id="cancelar"
+					rendered="#{cadastroInternaBean.cancelavel}" styleClass="oneMenu"
+					value="#{cadastroInternaBean.internacao.motivo}"
+					onkeyup="this.value = this.value.toUpperCase()">
+					<f:selectItem itemLabel="Selecione..." noSelectionOption="true" />
+					<f:selectItem itemLabel="ALTERAÇÃO" itemValue="ALTERAÇÃO" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Motivo Alta:" for="alta"
+					rendered="#{cadastroInternaBean.alta}" />
+				<p:selectOneMenu id="alta" rendered="#{cadastroInternaBean.alta}"
+					required="true" requiredMessage="Motivo Alta, Obrigatório!"
+					value="#{cadastroInternaBean.internacao.motivo}"
+					onkeyup="this.value = this.value.toUpperCase()">
+					<f:selectItem itemLabel="Selecione..." noSelectionOption="true" />
+					<f:selectItem itemLabel="A PEDIDO" itemValue="MELHORA" />
+					<f:selectItem itemLabel="CURADO" itemValue="CURADO" />
+					<f:selectItem itemLabel="EVASÃO" itemValue="EVASÃO" />
+					<f:selectItem itemLabel="MELHORA" itemValue="MELHORA" />
+					<f:selectItem itemLabel="ÓBITO" itemValue="ÓBITO" />
+					<f:selectItem itemLabel="TRANSFERÊNCIA INTER HOSPITALAR"
+						itemValue="TRANSFERENCIA INTER HOSPITALAR" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Motivo Transferência:" for="transf"
+					rendered="#{cadastroInternaBean.transferivel}" />
+				<p:selectOneMenu id="transf"
+					rendered="#{cadastroInternaBean.transferivel}" required="true"
+					requiredMessage="Motivo Transferência, Obrigatório!"
+					value="#{cadastroInternaBean.internacao.motivo}"
+					onkeyup="this.value = this.value.toUpperCase()">
+					<f:selectItem itemLabel="Selecione..." noSelectionOption="true" />
+					<f:selectItem itemLabel="PIORA DO QUADRO"
+						itemValue="PIORA DO QUADRO" />
+					<f:selectItem itemLabel="MELHORA" itemValue="MELHORA" />
+					<f:selectItem itemLabel="PÓS CIRURGICO" itemValue="PÓS CIRURGICO" />
+					<f:selectItem itemLabel="PROCEDIMENTO CIRURGICO"
+						itemValue="PROCEDIMENTO CIRURGICO" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+
+			<p:tabView id="tabPanelObs" styleClass="tabWidget" dynamic="true"
+				effect="clip">
+				<p:tab title="Observação"
+					rendered="#{cadastroInternaBean.internacao.novo or cadastroInternaBean.transferivel}">
+					<h:panelGroup layout="block" styleClass="ui-fluid form-group">
+						<p:inputTextarea rows="5" style="width: 100%" maxlength="1000"
+							counter="cont" counterTemplate="{0} Caracteres."
+							disabled="#{cadastroInternaBean.cancelavel}"
+							value="#{cadastroInternaBean.internacao.obs_interncao}"
+							id="obs_transferencia" required="true"
+							requiredMessage="Observação para Internação, Obrigatório!">
+						</p:inputTextarea>
+						<h:outputText id="cont" value="1000" />
+					</h:panelGroup>
+				</p:tab>
+
+				<p:tab title="Observação" rendered="#{cadastroInternaBean.alta}">
+					<h:panelGroup layout="block" styleClass="ui-fluid form-group">
+						<p:inputTextarea rows="5" style="width: 100%" required="true"
+							maxlength="1000" counter="contAlta"
+							counterTemplate="{0} Caracteres."
+							requiredMessage="Observação para Alta, Obrigatório!"
+							value="#{cadastroInternaBean.internacao.obs_alta}" id="obs_alta">
+						</p:inputTextarea>
+						<p:outputLabel id="contAlta" value="1000" />
+					</h:panelGroup>
+				</p:tab>
+
+				<p:tab title="Observação" rendered="#{cadastroInternaBean.cancela}">
+					<h:panelGroup layout="block" styleClass="ui-fluid form-group">
+						<p:inputTextarea rows="5" style="width: 100%" required="true"
+							maxlength="1000" counter="contCancela"
+							counterTemplate="{0} Caracteres."
+							requiredMessage="Observação para Cancelar, Obrigatório!"
+							value="#{cadastroInternaBean.internacao.obs_cancela}"
+							id="obs_cancela">
+						</p:inputTextarea>
+						<p:outputLabel id="contCancela" value="1000" />
+					</h:panelGroup>
+				</p:tab>
+
+
+			</p:tabView>
+
+		</div>
+
+		<p:dataTable value="#{cadastroInternaBean.internacoes}"
+			emptyMessage="Nenhum Cliente encontrado." rows="15"
+			rowIndexVar="rowIndex" paginator="true" id="internacao"
+			paginatorAlwaysVisible="false" paginatorPosition="bottom"
+			var="internacao">
+			<f:facet name="header">
+					Registro de pacientes internados
+				</f:facet>
+			<p:ajax event="rowSelect" />
+			<p:column headerText="Chave"
+				style="width : 100px; text-align : center">
+				<h:outputText value="#{internacao.controle}" id="chave" />
+			</p:column>
+			<p:column headerText="Hospital" style="width : 300px">
+				<h:outputText value="#{internacao.leito.hospital.fornecedor}" />
+			</p:column>
+			<p:column headerText="Clínica" style="width : 150px">
+				<h:outputText value="#{internacao.leito.clinica.nome}" />
+			</p:column>
+			<p:column headerText="Leito" style="width : 150px">
+				<h:outputText value="#{internacao.leito.nome}" />
+			</p:column>
+			<p:column headerText="Cid" style="width: 140px">
+				<h:outputText value="#{internacao.cid.descrabrev}" />
+			</p:column>
+			<p:column headerText="Paciente" style="width : 300px"
+				filterBy="#{internacao.paciente.nome}">
+				<h:outputText value="#{internacao.paciente.nome}" />
+			</p:column>
+			<p:column headerText="Data/Hora"
+				style="text-align : center; width : 115px">
+				<h:outputText value="#{internacao.dataInternacao}" id="data">
+					<format:LocalDateTimeConverter pattern="dd/MM/yyyy HH:mm:ss" />
+				</h:outputText>
+				<p:tooltip id="toolUser" for="data" position="bottom"
+					rendered="#{seguranca.usuarioResponsavelRegulacao}">
+					<h:outputText
+						value="Usuário responsavel: #{internacao.usuario.nome}" />
+				</p:tooltip>
+			</p:column>
+			<p:column headerText="Situação"
+				style="text-align : center; width : 70px">
+				<h:outputText value="#{internacao.status}"
+					style="#{internacao.ocupado ? 'color : red' : 'color : blue'} " />
+			</p:column>
+
+			<p:column style="text-align: center; width: 195px" headerText="Ações">
+				<p:commandButton icon="home-icon" title="Alta de paciente"
+					immediate="true" process="@this"
+					action="#{cadastroInternaBean.acaoAlta}"
+					update=":tabPanelWidget:frmInternacao">
+					<f:setPropertyActionListener value="#{internacao}"
+						target="#{cadastroInternaBean.internacao}" />
+				</p:commandButton>
+				<p:commandButton icon="tranfer-icon" title="Tranferir paciente"
+					immediate="true" process="@this"
+					action="#{cadastroInternaBean.checkInternacao}"
+					update=":tabPanelWidget:frmInternacao">
+					<f:setPropertyActionListener value="#{internacao}"
+						target="#{cadastroInternaBean.internacao}"></f:setPropertyActionListener>
+				</p:commandButton>
+				<p:commandButton icon="cancelar-icon" title="Cancelar Internação"
+					immediate="true" process="@this"
+					update=":tabPanelWidget:frmInternacao"
+					action="#{cadastroInternaBean.acaoCancelar}">
+					<f:setPropertyActionListener value="#{internacao}"
+						target="#{cadastroInternaBean.internacao}" />
+				</p:commandButton>
+				<p:commandButton icon="imprimir-icon" title="Imprimir Internação"
+					immediate="true" ajax="false"
+					action="#{cadastroInternaBean.imprimirRecibo(internacao.id)}" />
+				<p:button icon="pesquisar-icon" title="Visualizar"
+					outcome="/internacao/DetalheRequisicoes" target="_blank">
+					<f:param name="internacao" value="#{internacao.id}" />
+				</p:button>
+			</p:column>
+			<f:facet name="footer">
+				<h:outputText value="#{fn:length(cadastroInternaBean.internacoes)}" />
+				<h:outputText value=" Internações no momento. " />
+			</f:facet>
+		</p:dataTable>
+	</h:form>
+
+
+</ui:composition>

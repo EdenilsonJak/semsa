@@ -1,0 +1,67 @@
+<ui:composition template="/WEB-INF/template/LayoutAlmoxarifado.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<ui:define name="head">
+		#{cadastroFornecedorBean.fornecedor.novo ? "Cadastro de Fornecedores" : "Editando Fornecedor"}
+	</ui:define>
+	<ui:define name="content">
+	<h:form>		
+		<p:messages autoUpdate="true" closable="true"/>
+		
+		<p:toolbar>
+			<p:toolbarGroup>
+				<p:commandButton value="Pesquisar" icon="pesquisar-icon" update="@form" action="#{pesquisaFornecedorBean.pesquisar}"/>
+			</p:toolbarGroup>
+			<p:toolbarGroup align="right">
+				<p:button value="Novo" icon="novo-icon" outcome="/almoxarifado/fornecedor/CadastroFornecedor"/>
+			</p:toolbarGroup>
+		</p:toolbar>
+		
+		<div class="ui-fluid" style="margin-top: 20px">
+		<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px" layout="grid"
+			columnClasses="ui-grid-col-1, ui-grid-col-6, ui-grid-col-1, ui-grid-col-4"
+					styleClass="panelgrid-noborder">
+					
+			<p:outputLabel value="Fornecedor"/>
+			<p:inputText size="70" value="#{pesquisaFornecedorBean.fornecedorFilter.fornecedor}"/>
+			
+			<p:outputLabel value="Fantasia"/>
+			<p:inputText size="70" value="#{pesquisaFornecedorBean.fornecedorFilter.fantasia}"/>
+				
+			<p:outputLabel value="CNPJ"/>
+			<p:inputMask mask="99.999.999/9999-99" size="14" value="#{pesquisaFornecedorBean.fornecedorFilter.CNPJ}"/>	
+		</p:panelGrid>
+		</div>
+		
+		<p:dataTable id="fornecedoresTable" value="#{pesquisaFornecedorBean.fornecedoresFiltrados}" var="fornecedor"
+			style="margin-top: 20px" emptyMessage="Nenhum Fornecedor encontrado." rows="20"
+			paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+			<p:column headerText="Fornecedor">
+				<h:outputText value="#{fornecedor.fornecedor}"/>
+			</p:column>
+			<p:column headerText="Fantasia">
+				<h:outputText value="#{fornecedor.fantasia}"/>			
+			</p:column>
+			<p:column headerText="Cnpj">
+				<h:outputText value="#{fornecedor.cnpjFormatado}"/>
+			</p:column>
+			<p:column headerText="CEP" style="text-align: right">
+				<h:outputText value="#{fornecedor.cepFormatado}"/>
+			</p:column>
+			<p:column style="width: 100px; text-align: center" headerText="Ações">
+				<p:button icon="editar-icon" title="Editar" outcome="/almoxarifado/fornecedor/CadastroFornecedor">
+					<f:param name="fornecedor" value="#{fornecedor.id}"/>
+				</p:button>
+			</p:column>
+		</p:dataTable>
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>

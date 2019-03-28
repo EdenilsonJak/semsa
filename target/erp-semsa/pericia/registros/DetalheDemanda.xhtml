@@ -1,0 +1,182 @@
+<ui:composition template="/WEB-INF/template/LayoutPericia.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<ui:define name="head">
+		Detalhe pericia médica
+	</ui:define>
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<o:viewParam name="pericia"
+				value="#{cadastroDemandaPericiaBean.pericia}" />
+		</f:metadata>
+		<h:form id="frmDetalhePericia" prependId="false">
+
+			<p:outputPanel id="panel_paciente">
+				<p:panel header="Dados do Paciente">
+
+					<div class="ui-fluid"
+						style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+						<p:panelGrid columns="4" layout="grid" id="grid_panel_paciente"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+							styleClass="panelgrid-noborder">
+
+							<p:outputLabel value="Nome do Paciente:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.nome}" />
+
+							<p:outputLabel value="Nome da Mãe:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.nome_mae}" />
+
+							<p:outputLabel value="Data de Nascimento:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.dt_nascimento}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+
+							<p:outputLabel value="Cartão Sus:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.sus}" />
+
+							<p:outputLabel value="Logradouro:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.tipoLogradouro}" />
+
+							<p:outputLabel value="Endereço:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.logradouro}" />
+
+							<p:outputLabel value="Número:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.numero}" />
+
+							<p:outputLabel value="Bairro:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.bairro}" />
+
+							<p:outputLabel value="Cep:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.cep}" />
+
+							<p:outputLabel value="Cidade e Estado:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.paciente.cidade} - #{cadastroDemandaPericiaBean.pericia.paciente.uf}" />
+
+						</p:panelGrid>
+					</div>
+
+				</p:panel>
+			</p:outputPanel>
+
+			<br />
+
+			<p:outputPanel id="panel_demanda_origem">
+				<p:panel header="Dados demanda">
+
+					<div class="ui-fluid"
+						style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+						<p:panelGrid columns="4" layout="grid" id="grid_panel_internacao"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+							styleClass="panelgrid-noborder">
+							
+							<p:outputLabel value="Data Registro:"/>
+							<h:outputText value="#{cadastroDemandaPericiaBean.pericia.dt_entrada}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="#{appBean.timeZone}" />
+							</h:outputText>
+
+							<p:outputLabel value="Estabelecimento origem:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.estabelecimento.fantasia}" />
+
+							<p:outputLabel value="Médico Solicitante:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.medico.nome}" />
+
+							<p:outputLabel value="Cid 10:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.cid.descrabrev}" />
+
+							<p:outputLabel value="Procedimento:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.co_procedimento} - #{cadastroDemandaPericiaBean.pericia.no_procedimento}" />
+
+							<p:outputLabel value="Estabelecimento destino:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.estabelecimentoDestino.fantasia}" />
+
+						</p:panelGrid>
+					</div>
+
+					<p:outputLabel value="Observações:"
+						style="margin-left : 10px; margin-top: 2px" />
+					<h:outputText
+						value="#{cadastroDemandaPericiaBean.pericia.obs_entrada}"
+						style="margin-left: 2px" />
+
+				</p:panel>
+			</p:outputPanel>
+
+			<br />
+
+			<p:outputPanel id="panelRecebedor">
+				<p:panel header="Dados de entrega"
+					rendered="#{cadastroDemandaPericiaBean.pericia.doc == 'CPF' || cadastroDemandaPericiaBean.pericia.doc == 'RG'}">
+
+					<div class="ui-fluid"
+						style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+						<p:panelGrid id="grid_panel_obs" columns="4" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+							styleClass="panelgrid-noborder">
+
+							<p:outputLabel value="Data Entrega:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.dt_entrega}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="#{appBean.timeZone}" />
+							</h:outputText>
+
+							<p:outputLabel value="Nome recebedor:" />
+							<h:outputText
+								value="#{cadastroDemandaPericiaBean.pericia.nomeRecebor}" />
+
+							<p:outputLabel value="RG:"
+								rendered="#{cadastroDemandaPericiaBean.pericia.doc == 'RG'}" />
+							<h:outputText value="#{cadastroDemandaPericiaBean.pericia.rgCpf}"
+								rendered="#{cadastroDemandaPericiaBean.pericia.doc.descricao == 'RG'}" />
+
+							<p:outputLabel value="CPF:"
+								rendered="#{cadastroDemandaPericiaBean.pericia.doc == 'CPF'}" />
+							<h:outputText value="#{cadastroDemandaPericiaBean.pericia.cpfFormatado}"
+								rendered="#{cadastroDemandaPericiaBean.pericia.doc == 'CPF'}">
+							</h:outputText>
+							
+							<p:outputLabel value="Contato 1:" />
+							<h:outputText value="#{cadastroDemandaPericiaBean.pericia.contatoCel}" />
+
+							<p:outputLabel value="Contato 2:" />
+							<h:outputText value="#{cadastroDemandaPericiaBean.pericia.contatoCel1}" />
+
+						</p:panelGrid>
+					</div>
+
+					<p:outputLabel value="Observações:"
+						style="margin-left : 10px; margin-top: 2px" />
+					<h:outputText
+						value="#{cadastroDemandaPericiaBean.pericia.obs_entrega}"
+						style="margin-left: 2px" />
+
+				</p:panel>
+			</p:outputPanel>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

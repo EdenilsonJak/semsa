@@ -1,0 +1,206 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<p:dialog showEffect="drop" hideEffect="clip" height="300"
+		header="Entrega de Laudos" widgetVar="periciaDialog"
+		id="dialogPericia" resizable="false" responsive="true">
+
+		<div class="ui-fluid" style="margin-top: 5px;">
+
+			<p:messages autoUpdate="false" closable="true" id="msgDialog" />
+
+			<p:outputPanel id="panel_paciente">
+				<p:panel header="Dados do paciente">
+
+					<p:panelGrid columns="4" layout="grid" id="grid_panel_paciente"
+						columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Nome Paciente:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{pesquisaPericiaBean.periciaDialog.paciente.nome}" />
+
+						<p:outputLabel value="Cartão SUS:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{pesquisaPericiaBean.periciaDialog.paciente.sus}" />
+
+						<p:outputLabel value="Data de Nascimento:"
+							style="font-weight: bold;" />
+						<h:outputText
+							value="#{pesquisaPericiaBean.periciaDialog.paciente.dt_nascimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+						<p:outputLabel value="Data entrada:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{pesquisaPericiaBean.periciaDialog.dt_entrada}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm"
+								timeZone="#{appBean.timeZone}" />
+						</h:outputText>
+
+					</p:panelGrid>
+
+				</p:panel>
+			</p:outputPanel>
+		</div>
+
+		<div class="ui-fluid" style="margin-top: 5px; margin-bottom: 5px">
+
+			<p:outputPanel id="panel_estabelecimento">
+				<p:panel header="Dados do estabelecimento">
+
+					<p:panelGrid columns="4" layout="grid"
+						id="grid_panel_estabelecimento"
+						columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Origem:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{pesquisaPericiaBean.periciaDialog.estabelecimento.fantasia}">
+						</h:outputText>
+
+						<p:outputLabel value="CNPJ:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{pesquisaPericiaBean.periciaDialog.estabelecimento.cnpjFormatado}">
+						</h:outputText>
+
+						<p:outputLabel value="Destino:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{pesquisaPericiaBean.periciaDialog.estabelecimentoDestino.fantasia}">
+						</h:outputText>
+
+						<p:outputLabel value="CNPJ:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{pesquisaPericiaBean.periciaDialog.estabelecimentoDestino.cnpjFormatado}">
+						</h:outputText>
+
+					</p:panelGrid>
+
+				</p:panel>
+			</p:outputPanel>
+		</div>
+
+
+		<div class="ui-fluid" style="margin-top: 5px; margin-bottom: 5px">
+
+			<p:outputPanel id="panel_dados_entrega">
+
+				<p:panel header="Dados do recebedor">
+
+					<h:panelGroup id="tipodocGroup">
+						<h:outputLabel value="Tipo de documento" for="doc"
+							style="margin-left: 10px;" />
+						<h:selectOneRadio id="doc"
+							value="#{pesquisaPericiaBean.periciaDialog.doc}">
+							<f:selectItem itemLabel="Rg" itemValue="RG" />
+							<f:selectItem itemLabel="CPF" itemValue="CPF" />
+							<p:ajax listener="#{pesquisaPericiaBean.updateComponentes}"
+								update="grid_panel_dados_entrega" />
+						</h:selectOneRadio>
+					</h:panelGroup>
+
+					<p:panelGrid columns="4" layout="grid"
+						id="grid_panel_dados_entrega"
+						columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Nome:" for="nome" />
+						<p:inputText id="nome"
+							value="#{pesquisaPericiaBean.periciaDialog.nomeRecebor}"
+							required="true" requiredMessage="Nome Recebedor obrigatório" />
+
+						<p:outputLabel value="CPF:" for="cpf"
+							rendered="#{pesquisaPericiaBean.periciaDialog.doc == 'CPF'}" />
+						<p:inputMask mask="999.999.999-99" id="cpf" size="9"
+							required="true" requiredMessage="CPF recebedor obrigatório"
+							value="#{pesquisaPericiaBean.periciaDialog.rgCpf}"
+							rendered="#{pesquisaPericiaBean.periciaDialog.doc == 'CPF'}"
+							converter="app.numbersConverter">
+						</p:inputMask>
+
+						<p:outputLabel value="RG:" for="rg"
+							rendered="#{pesquisaPericiaBean.periciaDialog.doc == 'RG'}" />
+						<p:inputText id="rg" required="true"
+							requiredMessage="RG recebedor obrigatório"
+							value="#{pesquisaPericiaBean.periciaDialog.rgCpf}"
+							rendered="#{pesquisaPericiaBean.periciaDialog.doc == 'RG'}">
+						</p:inputText>
+
+						<p:outputLabel value="Telefone Cel:" for="telefone" />
+						<p:inputMask mask="(99)99999-9999" id="telefone" size="10"
+							value="#{pesquisaPericiaBean.periciaDialog.contatoCel}" />
+
+
+						<p:outputLabel value="Telefone Cel:" for="telefone1" />
+						<p:inputMask mask="(99)99999-9999" id="telefone1" size="10"
+							value="#{pesquisaPericiaBean.periciaDialog.contatoCel1}" />
+
+					</p:panelGrid>
+
+				</p:panel>
+			</p:outputPanel>
+		</div>
+
+		<div class="ui-fluid"
+			style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+
+			<p:outputPanel id="panelObsEntrega">
+				<p:panel header="Observações">
+
+					<p:outputLabel value="Obs:" for="obs" />
+					<p:inputTextarea rows="5" style="width : 100%" maxlength="1000"
+						id="obs" value="#{pesquisaPericiaBean.periciaDialog.obs_entrega}"
+						counter="cont_obs" counterTemplate="{0} Caracteres restantes.">
+
+					</p:inputTextarea>
+					<h:outputText id="cont_obs" />
+
+				</p:panel>
+			</p:outputPanel>
+
+
+		</div>
+
+		<!-- 
+			<h:panelGroup id="obsEntrega"
+				rendered="#{pesquisaPericiaBean.periciaDialog.status == 'RECEBIDO'}">
+				<p:outputLabel value="Observações de entrega:" for="observacoesEntrega" />
+				<p:inputTextarea rows="6" style="width: 98%; margin-top : 4px;"
+					value="#{pesquisaRequisicoesRecepcao.itemReceituario.obs_marcacao}"
+					id="observacoesEntrega" required="true"
+					requiredMessage="Observação é obrigatório" />
+			</h:panelGroup>
+
+			<h:panelGroup id="obsCancelar"
+				rendered="#{pesquisaRequisicoesRecepcao.cancelar}">
+				<p:outputLabel value="Observações para cancelar:" for="observacoesCancelar" />
+				<p:inputTextarea rows="6" style="width: 98%; margin-top : 4px;"
+					value="#{pesquisaRequisicoesRecepcao.itemReceituario.obs_cancelar}"
+					id="observacoesCancelar" required="true"
+					requiredMessage="Observação é obrigatório" />
+			</h:panelGroup>
+		-->
+		<p:commandButton value="Entregar" process="dialogPericia"
+			icon="check-icon"
+			rendered="#{pesquisaPericiaBean.periciaDialog.status == 'RECEBIDO'}"
+			disabled="#{not seguranca.permissaoAcoesPericia}"
+			update="msgDialog panel_dados_entrega :frmEntrega:dataItem"
+			oncomplete="if(args.sucesso == true) PF('periciaDialog').hide()"
+			action="#{pesquisaPericiaBean.salvarEntregar}"
+			onblur="PF('myWidgetVar').filter()" />
+
+		<!-- <p:commandButton value="Cancelar" process="dialogPericia"
+				icon="cancelar-icon" disabled="#{seguranca.acessoPericia}"
+				rendered="#{pesquisaPericiaBean.periciaDialog.status == 'RECEBIDO' || pesquisaPericiaBean.periciaDialog.status == 'ENTREGUE'}"
+				update=":frmEntrega msgDialog"
+				oncomplete="if(args.sucesso == true) PF('periciaDialog').hide()"
+				onblur="PF('myWidgetVar').filter()" /> -->
+
+
+	</p:dialog>
+
+</ui:composition>

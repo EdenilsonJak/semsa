@@ -1,0 +1,76 @@
+<ui:composition template="/WEB-INF/template/LayoutLicitacao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:define name="head">Pesquisa Requisições</ui:define>	
+	
+	<ui:define name="content">
+	<h:form>
+		<p:toolbar style="margin-top: 0px">
+			<p:toolbarGroup>
+				<p:commandButton value="Pesquisar" action="#{pesquisaRequisicaoBean.pesquisar}"
+					update="@form"/>
+			</p:toolbarGroup>
+			<p:toolbarGroup align="right">
+				<p:button value="Novo" outcome="CadastroRequisicao"/>
+			</p:toolbarGroup>
+		</p:toolbar>
+		
+		<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 5px"
+			columnClasses="rotulo, campo">
+			
+			<p:outputLabel value="Cod. Chave" for="codigo"/>
+			<p:inputText id="codigo" size="7" value="#{pesquisaRequisicaoBean.requisicaoFilter.cod}"/>
+			
+			<p:outputLabel value="Data Requisição" />
+			<h:panelGroup>
+			<p:calendar pattern="dd/MM/yyyy" size="7"
+			value="#{pesquisaRequisicaoBean.requisicaoFilter.dataInicio}" locale="pt_BR"/>
+			a
+			<p:calendar pattern="dd/MM/yyyy" size="7"
+			value="#{pesquisaRequisicaoBean.requisicaoFilter.dataFim}" locale="pt_BR"/>
+			</h:panelGroup>
+			
+			<p:outputLabel value="Status" />
+				<p:selectManyCheckbox value="#{pesquisaRequisicaoBean.requisicaoFilter.statuses}">
+					<f:selectItems value="#{pesquisaRequisicaoBean.statuses}" var="status"
+						itemValue="#{status}" itemLabel="#{status.descricao}" />
+			</p:selectManyCheckbox> 
+			
+		</p:panelGrid>
+		
+		<p:dataTable id="requisicaoTable" value="#{pesquisaRequisicaoBean.requisicoesFiltrados}" var="requisicao"
+			style="margin-top: 5px" emptyMessage="Nenhuma requisição encontrada." rows="20"
+			paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+			<p:column headerText="Cód. Chave" style="width: 100px; text-align: center">
+				<h:outputText value="#{requisicao.id}"/>
+			</p:column>
+			<p:column headerText="Data" style="width: 100px; text-align: center">
+				<h:outputText value="#{requisicao.dataRequisicao}">
+					<f:convertDateTime pattern="dd/MM/yyyy"/>
+				</h:outputText>			
+			</p:column>
+			
+			<p:column headerText="Status" style="width: 100px; text-align: center">
+					<h:outputText value="#{requisicao.status.descricao}" />
+			</p:column>
+				
+			<p:column headerText="Valor Total" style="text-align: right; width: 100px">
+				<h:outputText value="#{requisicao.vlrTotal}">
+					<f:convertNumber type="currency"/>
+				</h:outputText>
+			</p:column>
+			<p:column style="width: 100px; text-align: center">
+				<p:button icon="editar-icon" title="Editar" outcome="CadastroRequisicao">
+					<f:param name="requisicao" value="#{requisicao.id}"/>
+				</p:button>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>

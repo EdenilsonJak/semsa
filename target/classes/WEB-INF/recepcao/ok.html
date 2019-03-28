@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<script language="JavaScript" type="text/JavaScript">
+	function setColorRadioGroup(radioGroup) {
+		var radio = radioGroup;
+		if (radio[0].style) {
+			for (var r = 0; r < radio.length; r++)
+				if (radio[r].checked)
+					swapColor(radio[r]);
+				else
+					swapColor(radio[r]);
+		}
+	}
+	function swapColor(oCheckbox) {
+		var pop = oCheckbox, checkedcolor = '#FFFFAC';
+		while (pop.nodeType != 1 || pop.nodeName.toLowerCase() != 'tr')
+			pop = pop.parentNode;
+		pop.style.backgroundColor = (oCheckbox.checked) ? checkedcolor
+				: '#FFFFFF';
+	}
+//-->
+</script>
+</head>
+<body>
+	<form id="form1" name="form1" method="post" action="">
+		<table border="1">
+			<tr>
+				<td scope="row"><input name="radiobutton" type="radio"
+					onclick="setColorRadioGroup(this.form[this.name])"
+					value="radiobutton" /></td>
+				<td>radiobutton</td>
+			</tr>
+			<tr>
+				<td scope="row"><input name="radiobutton" type="radio"
+					onclick="setColorRadioGroup(this.form[this.name])"
+					value="radiobutton" /></td>
+				<td>radiobutton</td>
+			</tr>
+			<tr>
+				<td scope="row"><input name="radiobutton" type="radio"
+					onclick="setColorRadioGroup(this.form[this.name])"
+					value="radiobutton" /></td>
+				<td>radiobutton</td>
+			</tr>
+		</table>
+	</form>
+	<form id="form2" name="form2" method="post" action="">
+		<table border="1">
+			<tr>
+				<td scope="row"><input name="radiobutton" type="radio"
+					onclick="setColorRadioGroup(this.form[this.name])"
+					value="radiobutton" /></td>
+				<td>radiobutton</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
+Testem aí! []'s IR PARA A LISTA DE TÓPICOS Javascript Gabriel Robucce
+Preciso de Ajuda HTML/JavaScript Por Gabriel Robucce, 21 horas em HTML e
+CSS DigRam Notebook Travando! Por karoline ferreira, sábado às 22:11 em
+Remoção de Malwares Nuno Salgado HACKTOOL:WIN32/AUTOKMS aparece todos os
+dias Por Nuno Salgado, 6 horas em Remoção de Malwares

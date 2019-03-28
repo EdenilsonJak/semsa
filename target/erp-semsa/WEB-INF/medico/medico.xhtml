@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmMedico" prependId="false">
+		<p:messages autoUpdate="true" closable="true" id="msg" />
+
+		<p:toolbar>
+			<p:toolbarGroup>
+				<p:commandButton value="Salvar" icon="salvar-icon"
+					action="#{cadastroMedicoBean.salvar}" update="@form" validateClient="true"
+					disabled="#{seguranca.acessoVisitante}"/>
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<div class="ui-fluid" style="margin-top: 20px">
+			<p:panelGrid columns="4" layout="grid"
+				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="Nome Médico:" for="nome" />
+				<p:inputText id="nome" size="50" maxlength="80" required="true"
+					value="#{cadastroMedicoBean.medico.nome}" />
+
+				<p:outputLabel value="Sexo:" for="sexo" />
+				<p:selectOneMenu id="sexo" value="#{cadastroMedicoBean.medico.sexo}">
+					<f:selectItem itemLabel="Masculino" itemValue="M" />
+					<f:selectItem itemLabel="Feminino" itemValue="F" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Data Nascimento:" for="data_nasc" />
+				<p:calendar id="data_nasc" showButtonPanel="true" size="6"
+					mask="true" type="button" pattern="dd/MM/yyyy" showOn="button"
+					value="#{cadastroMedicoBean.medico.nascimento}">
+				</p:calendar>
+
+				<p:outputLabel value="CPF:" for="cpf" />
+				<p:inputMask mask="999.999.999-99" id="cpf"
+					converter="app.numbersConverter"
+					value="#{cadastroMedicoBean.medico.cpf}" size="9"/>
+
+				<p:outputLabel value="Cartão SUS:" for="sus" />
+				<p:inputText id="sus" size="50" maxlength="80" required="true"
+					requiredMessage="Cartao sus é obrigatório!"
+					value="#{cadastroMedicoBean.medico.nr_sus}" />
+
+				<p:outputLabel value="CRM:" for="crm_numero" />
+				<p:inputText id="crm_numero" size="50"
+					value="#{cadastroMedicoBean.medico.crm_numero}" />
+
+				<p:outputLabel value="CEP:" for="cep" />
+				<p:inputMask mask="99.999-999" id="cep" size="7"
+					converter="app.numbersConverter"
+					value="#{cadastroMedicoBean.medico.cep}">
+					<p:ajax event="change" process="@this"
+						update="endereco bairro estado cidade logradouro msg"
+						listener="#{cadastroMedicoBean.buscarCep}" />
+				</p:inputMask>
+
+				<p:outputLabel value="Logradouro:" for="logradouro" />
+				<p:inputText id="logradouro" size="50"
+					value="#{cadastroMedicoBean.medico.tipo_logradouro}" />
+
+
+				<p:outputLabel value="Endereço:" for="endereco" />
+				<p:inputText id="endereco" size="50"
+					value="#{cadastroMedicoBean.medico.logradouro}" />
+
+				<p:outputLabel value="Número:" for="numero" />
+				<p:inputText id="numero" size="5"
+					value="#{cadastroMedicoBean.medico.numero}" />
+
+				<p:outputLabel value="Bairro:" for="bairro" />
+				<p:inputText id="bairro" size="40"
+					value="#{cadastroMedicoBean.medico.bairro}" />
+
+				<p:outputLabel value="Estado:" for="estado" />
+				<p:inputText id="estado" value="#{cadastroMedicoBean.medico.estado}" />
+
+				<p:outputLabel value="Cidade:" for="cidade" />
+				<p:inputText id="cidade" value="#{cadastroMedicoBean.medico.cidade}" />
+
+				<p:outputLabel value="Celular:" for="telefone" />
+				<p:inputMask mask="(99)99999-9999" id="telefone" size="10"
+					converter="app.numbersConverter"
+					value="#{cadastroMedicoBean.medico.celular}" />
+
+				<p:outputLabel value="Telefone fixo:" for="fixo" />
+				<p:inputMask mask="(99)9999-9999" id="fixo" size="10"
+					converter="app.numbersConverter"
+					value="#{cadastroMedicoBean.medico.fixo}" />
+
+				<p:spacer />
+				<p:spacer />
+
+			</p:panelGrid>
+		</div>
+	</h:form>
+
+
+</ui:composition>

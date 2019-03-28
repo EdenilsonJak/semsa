@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+
+	<p:dataTable id="dataItem" rowIndexVar="linha" style="margin-top: 10px"
+		value="#{pesquisaPericiaBean.lazyModel}" lazy="true" var="pericia"
+		emptyMessage="Nenhuma requisiçao registrada." paginator="true"
+		rows="10">
+		<f:facet name="header">
+					Resultado de demandas.
+			</f:facet>
+		<p:column headerText="Data Recebimento"
+			style="width : 80px; text-align : center">
+			<h:outputText value="#{pericia.dt_entrada}" id="data">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm"
+					timeZone="#{appBean.timeZone}" />
+			</h:outputText>
+			<p:tooltip id="toolUser" for="data" position="bottom">
+				<h:outputText
+					value="Usuário responsável: #{pericia.usuario_entrada.nome}" />
+			</p:tooltip>
+		</p:column>
+
+		<p:column headerText="Nome do Paciente" style="width : 190px">
+			<h:outputText value="#{pericia.paciente.nome}" />
+		</p:column>
+		<p:column headerText="Nascimento" style="width : 100px; text-align: center">
+			<h:outputText value="#{pericia.paciente.dt_nascimento}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText>
+		</p:column>
+		<p:column headerText="Nome Mãe" style="width : 170px">
+			<h:outputText value="#{pericia.paciente.nome_mae}" />
+		</p:column>
+		<p:column headerText="Cartão SUS Paciente" style="width : 120px">
+			<h:outputText value="#{pericia.paciente.sus}" />
+		</p:column>
+		<p:column headerText="Cid" style="width : 70px; text-align: center">
+			<h:outputText value="#{pericia.cid.subcat}" />
+		</p:column>
+		<p:column headerText="Procedimento" style="width : 90px; text-align: center">
+			<h:outputText value="#{pericia.co_procedimento}" />
+		</p:column>
+		<p:column headerText="Contato" style="width : 110px">
+			<h:outputText value="#{pericia.paciente.phone1}" />
+		</p:column>
+		<p:column headerText="Contato" style="width : 110px">
+			<h:outputText value="#{pericia.paciente.phone2}" />
+		</p:column>
+		<p:column headerText="Estabelecimento Origem" style="width : 190px">
+			<h:outputText value="#{pericia.estabelecimento.fantasia}" />
+		</p:column>
+		<p:column headerText="Estabelecimento Destino" style="width : 190px">
+			<h:outputText value="#{pericia.estabelecimentoDestino.fantasia}" />
+		</p:column>
+		<p:column headerText="Médico Solicitante" style="width : 190px">
+			<h:outputText value="#{pericia.medico.nome}" />
+		</p:column>
+		<p:column headerText="Tipo Logradouro" style="width : 90px">
+			<h:outputText value="#{pericia.paciente.tipoLogradouro}" />
+		</p:column>
+		<p:column headerText="Logradouro" style="width : 150px">
+			<h:outputText value="#{pericia.paciente.logradouro}" />
+		</p:column>	
+		<p:column headerText="Número" style="width : 50px; text-align: center">
+			<h:outputText value="#{pericia.paciente.numero}" />
+		</p:column>
+		<p:column headerText="Bairro" style="width : 100px; text-align: center">
+			<h:outputText value="#{pericia.paciente.bairro}" />
+		</p:column>
+		<p:column headerText="Cep" style="width : 90px; text-align: center">
+			<h:outputText value="#{pericia.paciente.cep}" />
+		</p:column>
+		<p:column headerText="Cidade" style="width : 100px; text-align: center">
+			<h:outputText value="#{pericia.paciente.cidade}" />
+		</p:column>
+		<p:column headerText="Estado" style="width : 50px; text-align: center">
+			<h:outputText value="#{pericia.paciente.uf}" />
+		</p:column>
+		<p:column headerText="Situação"
+			style="width : 90px; text-align : center">
+			<h:outputText value="#{pericia.status.descricao}"
+				rendered="#{pericia.status == 'PENDENTE'}" style="color : red" />
+			<h:outputText value="#{pericia.status.descricao}"
+				rendered="#{pericia.status == 'ENTREGUE'}" style="color : blue" />
+			<h:outputText value="#{pericia.status.descricao}"
+				rendered="#{pericia.status == 'RECEBIDO'}" style="color : green" />
+		</p:column>
+		<p:column headerText="Ações" style="text-align:center; width : 100px"
+			exportable="false">
+			<p:commandButton title="Entrega" icon="check-icon" immediate="true"
+				oncomplete="PF('periciaDialog').show()" process="@this"
+				update=":frmDialog:dialogPericia"
+				disabled="#{pericia.status == 'ENTREGUE'}">
+				<!-- <p:resetInput target=":frmEntrega:periciaDialog" /> -->
+				<f:setPropertyActionListener value="#{pericia}"
+					target="#{pesquisaPericiaBean.periciaDialog}" />
+			</p:commandButton>
+			<p:button icon="pesquisar-icon" title="Visualizar"
+				outcome="/pericia/registros/DetalheDemanda?faces-redirect=true"
+				target="_blank">
+				<f:param name="pericia" value="#{pericia.id_pericia}" />
+			</p:button>
+		</p:column>
+	</p:dataTable>
+</ui:composition>

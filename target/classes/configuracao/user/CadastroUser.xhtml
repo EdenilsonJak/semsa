@@ -1,0 +1,154 @@
+<ui:composition template="/WEB-INF/template/LayoutConfiguracao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam name="damy" />
+		<o:viewParam name="usuario" value="#{cadastroUsuarioBean.usuario}" />
+	</f:metadata>
+
+	<ui:define name="head">Cadastro de Usuários</ui:define>
+	<ui:define name="content">
+
+		<h:form id="frm">
+
+			<p:messages id="msg" closable="true" showDetail="true" />
+
+			<p:wizard flowListener="#{cadastroUsuarioBean.onFlowProcess}" 
+				id="wizard" backLabel="Voltar" nextLabel="Avançar">
+				<p:tab id="cadastro" title="Usuário">
+					<p:panel header="Dados Básicos">
+						<p:messages closable="true" />
+						<h:panelGrid columns="2" columnClasses="label, value">
+							<p:outputLabel value="Nome Usuário:" for="nome" />
+							<p:inputText id="nome" size="50" maxlength="80"
+								onkeyup="this.value = this.value.toUpperCase()"
+								value="#{cadastroUsuarioBean.usuario.nome}" required="true" />
+
+							<p:outputLabel value="Email:" for="email" />
+							<p:inputText id="email" size="50" maxlength="80"
+								value="#{cadastroUsuarioBean.usuario.email}" required="true">
+								<f:validator validatorId="emailValidator" />
+							</p:inputText>
+
+							<p:outputLabel value="Status" for="status" />
+							<p:selectOneMenu id="status"
+								value="#{cadastroUsuarioBean.usuario.status}" required="true">
+								<f:selectItem itemLabel="Selecione..." noSelectionOption="true" />
+								<f:selectItem itemLabel="Ativo" itemValue="Ativo" />
+								<f:selectItem itemLabel="Inativo" itemValue="Inativo" />
+							</p:selectOneMenu>
+							
+							<h:outputText value="Imagem: "/>
+							<h:panelGroup id="imagem">
+								<p:graphicImage id="foto_user"
+									style="max-width: 200px;max-height: 250px;" cache="false"
+									value="#{imageBean.st}">
+								</p:graphicImage>
+							</h:panelGroup>
+
+							<h:outputText value="Foto: " />
+							<p:fileUpload id="flUpload"
+								fileUploadListener="#{cadastroUsuarioBean.processFileUpload}" update="imagem" process="@this detalhe confirm"
+								label="Escolher" cancelLabel="Cancelar" sizeLimit="500000000"
+								invalidSizeMessage="Imagem muito grande" auto="false"
+								invalidFileMessage="Tipo de imagem não suportado"
+								allowTypes="/(\.|\/)(jpe?g)$/" />
+
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="detalhe" title="Senha e Perfil">
+					<p:panel header="Senha e Perfil">
+						<p:messages />
+						<h:panelGrid columns="2" columnClasses="label, value">
+							<p:outputLabel value="Senha:" for="senha" />
+							<p:password id="senha" size="50" maxlength="80"
+								value="#{cadastroUsuarioBean.confereSenha}"
+								promptLabel="Digite sua Senha" weakLabel="Senha Fraca"
+								goodLabel="Senha boa" strongLabel="Senha forte" feedback="true" />
+
+							<p:outputLabel value="Confirma Senha:" for="senhaconf2" />
+							<p:password id="senhaconf2" size="50" maxlength="80"
+								value="#{cadastroUsuarioBean.usuario.senha}"
+								promptLabel="Confirma sua senha" weakLabel="Senha Fraca"
+								goodLabel="Senha boa" strongLabel="Senha forte" feedback="true" />
+
+							<p:outputLabel value="Perfil de Usuário" for="grupo" />
+							<p:selectOneMenu id="grupo" value="#{cadastroUsuarioBean.grupo}">
+								<f:selectItem itemLabel="Selecione Grupo..."
+									noSelectionOption="true" />
+								<f:selectItems value="#{cadastroUsuarioBean.grupos}" var="g"
+									itemLabel="#{g.nome}" itemValue="#{g}" />
+								<p:ajax update="tabelaPerfil"
+									listener="#{cadastroUsuarioBean.setaGrupoUsuario}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:panel>
+
+					<hr style="background-color: #D3D1D1; height: 1px;"></hr>
+
+					<p:dataTable rows="15" var="perfil"
+						value="#{cadastroUsuarioBean.usuario.grupos}" rowIndexVar="linha"
+						id="tabelaPerfil" paginator="true" paginatorAlwaysVisible="false"
+						paginatorPosition="bottom">
+
+						<p:column headerText="Perfis do usuário"
+							style="max-width: 450px; min-width: 450px; overflow: hidden">
+							<h:outputText value="#{perfil.grupo.nome}" />
+						</p:column>
+
+						<p:column headerText="Ações" width="5%" style="text-align:center">
+							<p:commandButton title="Remover Perfil" update="tabelaPerfil"
+								process="@this" icon="delete-icon"
+								action="#{cadastroUsuarioBean.removePerfil(perfil, linha)}">
+							</p:commandButton>
+						</p:column>
+
+
+					</p:dataTable>
+
+				</p:tab>
+
+				<p:tab id="confirm" title="Confirmação">
+					<p:panel header="Confirmação">
+						<h:panelGrid id="confirmation" columns="3"
+							columnClasses="grid,grid,grid">
+							<h:panelGrid columns="2" columnClasses="label, value">
+								<h:outputText value="Nome: " />
+								<h:outputText value="#{cadastroUsuarioBean.usuario.nome}"
+									styleClass="outputLabel" />
+
+								<h:outputText value="Email: " />
+								<h:outputText value="#{cadastroUsuarioBean.usuario.email}"
+									styleClass="outputLabel" />
+
+								<h:outputText value="Status: " />
+								<h:outputText value="#{cadastroUsuarioBean.usuario.status}"
+									styleClass="outputLabel" />
+							</h:panelGrid>
+
+							<h:panelGrid columns="2" columnClasses="label, value">
+								<h:outputText value="Senha: " />
+								<p:outputLabel value="********" styleClass="outputLabel" />
+
+							</h:panelGrid>
+
+						</h:panelGrid>
+
+						<p:commandButton value="Salvar" update="frm"
+							actionListener="#{cadastroUsuarioBean.salvar}" />
+					</p:panel>
+				</p:tab>
+			</p:wizard>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+

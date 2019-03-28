@@ -1,0 +1,365 @@
+/* BASE */
+body {
+	margin: 0;
+	font-size: 13px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* TABVIEW */
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
+	color: #555;
+}
+
+@media ( max-width : 640px) {
+	.ui-tabs.ui-tabs-top>.ui-tabs-nav li {
+		width: 100%;
+	}
+	
+	
+}
+
+/* PANELGRID */
+.ui-panelgrid.panelgrid-noborder .ui-grid-responsive {
+	border: none;
+}
+
+@media ( max-width : 640px) {
+	.ui-panelgrid.panelgrid-noborder .ui-grid-responsive .ui-grid-row {
+		border: none;
+	}
+}
+
+.oneMenu{
+	min-width: 0px !important;
+}
+
+/*
+MUDAR IMAGEM DO AUTOCOMPLETE
+*/
+/* .oneMenu1 span.ui-icon{
+	background: url("#{resource['ejsistemas/images/print.png']}") !important;
+} */
+
+/*ACCORDION*/
+.ui-accordion .ui-accordion-header.ui-state-default {
+	margin-bottom: 1px;
+}
+
+/* remove uma linha preta escrota da header das tabelas */
+th[role="columnheader"].ui-state-default {
+	border-color: #ccc !important;
+}
+
+/* corrige o texto dentro do inputswitch e o backgroud*/
+.ui-inputswitch-on {
+	background: none !important;
+	color: green;
+}
+
+/* remover borda DATATABLE */
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+
+.ui-panelgrid td {
+	height: 34px
+}
+
+.ajax-status {
+	position: fixed;
+	top: 65px;
+	right: 10px;
+	width: 35px;
+	height: 35px;
+	z-index: 9999;
+}
+
+.ui-selectmanycheckbox td {
+	border-width: 0px !important;
+	padding: 0px !important;
+}
+
+.ui-selectmanycheckbox td label {
+	padding-right: 10px;
+}
+
+.produto-tabela input {
+	width: 99%
+}
+
+.fornecedor-tabela input {
+	width: 99%
+}
+
+
+/* marcacao de qual tab esta selecionada */
+ul.ui-tabs-nav>li.ui-tabs-selected {
+	margin-top: -2px;
+	border-top: 3px solid #23b7e5 !important;
+}
+
+/* arruma o toggler da tree */
+span.ui-tree-toggler {
+	position: relative;
+	top: 3px;
+}
+
+
+
+/* remove aquele asterisco porco dos forms 
+.ui-outputlabel-rfi {
+    display: none;
+}
+*/
+
+/* remove todos os efeitos arredondadinhos dos elementos */
+.ui-corner-all, .ui-state-default {
+	border-radius: 0 !important;
+}
+
+/* remove linhas indesejadas nos widgets */
+.ui-state-default, .ui-widget-content div.ui-state-default,
+	.ui-widget-header div.ui-state-default {
+	border-color: #ccc !important;
+}
+
+/* tira a sombra para que os botoes fiquem certos quando em widgets */
+.ui-widget-content button.ui-state-default {
+	box-shadow: none !important;
+}
+
+/* background quando com erro no label */
+label.ui-state-error {
+	background: none;
+}
+
+/* remove uma linha preta escrota da header das tabelas */
+th[role="columnheader"].ui-state-default {
+	border-color: #ccc !important;
+}
+
+/* remove icone de mensagens */
+.ui-messages ul {
+	margin: 0 !important;
+}
+
+.ui-messages span.ui-messages-info-icon {
+	display: none;
+}
+
+.ui-messages span.ui-messages-warn-icon {
+	display: none;
+}
+
+.ui-messages span.ui-messages-error-icon {
+	display: none;
+}
+
+/* corrige a borda do paginador das datatables */
+div.ui-paginator {
+	border: 1px solid #dddddd !important;
+	border-top: 0px !important;
+}
+
+/* /* Customiza TabView - in�cio */
+.tabWidget .ui-tabs-panel {
+	padding: 0.5em 0em !important;
+}
+
+/* /* Customiza TabView - fim  */
+.ui-state-disabled {
+	opacity: .80 !important;
+}
+
+/* Customiza menu sistemas*/
+
+.aw-menu > div a {
+	text-decoration: none;
+	
+}
+.aw-menu > div a:hover, .aw-menu > tr a:focus {
+	background-color: #dfdfdf;
+	
+}
+
+.ui-expanded-row-content .ui-widget-content tbody tr td {
+	overflow: hidden !important;
+	max-width: 800px !important;
+}
+
+/* Customizando components de consulta de producoes */
+
+.ui-fluid .tamanho input {
+    width: 86px !important;
+    
+}
+
+.ui-fluid .tamanho_ input {
+    width: 16% !important;
+    
+}
+
+.ui-fluid .tamanho_ {
+    margin-left: 3px !important;
+    
+}
+
+.ui-fluid .tamanho {
+	margin-left: 5px !important;
+}
+
+.ui-fluid .complete-producoes {
+	width: 70% !important;
+	margin-left: 3px !important;
+	display: inline-flex;
+}
+
+.ui-fluid .complete-hospital{
+	min-width: 380px !important;
+}
+
+
+.sqlDialogText {
+	display: block;
+	width: 600px;
+	height: 300px;
+	overflow: auto;
+	color: green;
+}
+
+fieldset {
+	padding: 1em;
+	float: left;
+	margin-right: 0.1em;
+	padding-top: 0.2em;
+	text-align: left;
+	border: 1px solid marrow;
+}
+
+.ui-datagrid {
+	border: none !important;
+}
+
+.ui-datagrid-content {
+	border: none !important;
+}
+
+.ui-messages {
+	width: auto;
+	margin: 0 auto !important;
+}
+
+/* customizacao das mensagens em tela */
+.ui-messages-error {
+	margin: 5px 0 10px 0 !important;
+	border: 1px solid #eee !important;
+	border-left-width: 3px !important;
+	/*border-radius: 3px !important;*/
+	border-left-color: #d9534f !important;
+	background-color: rgba(217, 83, 79, 0.1) !important;
+}
+
+.ui-messages-warn {
+	margin: 5px 0 10px 0 !important;
+	border: 1px solid #eee !important;
+	border-left-width: 3px !important;
+	/*border-radius: 3px !important;*/
+	border-left-color: #f0ad4e !important;
+	background-color: rgba(240, 173, 78, 0.1) !important;
+}
+
+.ui-messages-info {
+	margin: 5px 0 10px 0 !important;
+	border: 1px solid #eee !important;
+	border-left-width: 3px !important;
+	/*border-radius: 3px !important;*/
+	border-left-color: #5bc0de !important;
+	background-color: rgba(91, 192, 222, 0.1) !important;
+}
+
+.observacao{
+	background: url("#{resource['ejsistemas/images/comments.png']}") !important;
+}
+
+.usd{
+	background: url("#{resource['ejsistemas/images/usd.png']}") !important;
+}
+
+.check-icon{
+	background: url("#{resource['ejsistemas/images/check.png']}") !important;
+}
+
+.imprimir-icon{
+	background: url("#{resource['ejsistemas/images/print.png']}") !important;
+}
+
+.pesquisar-icon{
+	background: url("#{resource['ejsistemas/images/search.png']}") !important;
+}
+
+.icon-novo{
+	background: url("#{resource['ejsistemas/images/Add-16x16.png']}") !important;
+}
+
+.novo-icon{
+	background: url("#{resource['ejsistemas/images/add-file 16x16.png']}") !important;
+}
+
+.editar-icon{
+	background: url("#{resource['ejsistemas/images/editar.png']}") !important;
+}
+
+.salvar-icon{
+	background: url("#{resource['ejsistemas/images/save 16x16.png']}") !important;
+}
+
+.atualizar-icon{
+	background: url("#{resource['ejsistemas/images/refresh 16x16.png']}") !important;
+}
+
+.delete-icon{
+	background: url("#{resource['ejsistemas/images/delete.png']}") !important;
+}
+.internar-icon{
+	background: url("#{resource['ejsistemas/images/internacao.png']}") !important;
+}
+
+.tranfer-icon{
+	background: url("#{resource['ejsistemas/images/user transfer 16x16.png']}") !important;
+}
+
+.addPasta-icon{
+	background: url("#{resource['ejsistemas/images/add-folder-16x16.png']}") !important;
+}
+
+.home-icon{
+	background: url("#{resource['ejsistemas/images/Home-16.png']}") !important;
+}
+
+.cancelar-icon{
+	background: url("#{resource['ejsistemas/images/Cancel-16.png']}") !important;
+}
+
+.alert-icon{
+	background: url("#{resource['ejsistemas/images/alert.png']}") !important;
+}
+
+.xls-icon{
+	background: url("#{resource['ejsistemas/images/xls 16x.png']}") !important;
+}
+
+/* #prioridade input:checked + label{
+	 outline: 2px dotted #21b4d0;
+} */
+
+
+/* configurando lista de lu do autocomplete 
+div#paciente_panel.ui-autocomplete-panel {
+	top: 190px !important;
+}
+
+tabPanelWidget:diagnostico_panel.ui-autocomplete-panel ui-widget-content{
+	top: 312px !important;
+	
+}
+*/

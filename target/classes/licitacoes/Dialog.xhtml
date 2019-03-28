@@ -1,0 +1,27 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+		<p:dialog header="Unidade Solicitante" widgetVar="unidadeSolicitante" id="incluir">
+				
+			<p:panelGrid columns="4" style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo, rotulo, campo">
+			
+				<p:outputLabel value="Produto"/>
+				<h:outputText value="#{cadastroLicitacaoBean.itemLicitacao.produto.nome}"/>
+				
+				<p:outputLabel value="V.Unit"/>
+				<h:outputText value="#{cadastroLicitacaoBean.itemLicitacao.vlrUnitario}">
+					<f:convertNumber type="currency"/>
+				</h:outputText>
+				
+				<p:separator style="border: 0px"/>
+				<p:separator style="border: 0px"/>
+				
+			</p:panelGrid>
+				
+		</p:dialog>
+
+</ui:composition>

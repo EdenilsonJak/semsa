@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<div class="ui-fluid" style="margin-top: 5px;">
+
+
+
+		<p:panelGrid columns="2" layout="grid" id="grid_panel_judicial"
+			columnClasses="ui-grid-col-2, ui-grid-col-10"
+			styleClass="panelgrid-noborder">
+			<p:outputLabel value="Período de entrada:" />
+			<h:panelGroup>
+				<p:calendar styleClass="tamanho_" pattern="dd/MM/yyyy"
+					value="#{pesquisaRequisicoesRecepcao.requisicaoRecepcaoFilter.dataInicioRequisicao}">
+				</p:calendar>	
+						a
+				<p:calendar styleClass="tamanho_" pattern="dd/MM/yyyy"
+					value="#{pesquisaRequisicoesRecepcao.requisicaoRecepcaoFilter.dataFimRequisicao}">
+				</p:calendar>
+			</h:panelGroup>
+			
+			<p:outputLabel value="Período de marcação:" />
+			<h:panelGroup>
+				<p:calendar styleClass="tamanho_" pattern="dd/MM/yyyy"
+					value="#{pesquisaRequisicoesRecepcao.requisicaoRecepcaoFilter.dataInicioRequisicaoMarcacao}">
+				</p:calendar>	
+						a
+				<p:calendar styleClass="tamanho_" pattern="dd/MM/yyyy"
+					value="#{pesquisaRequisicoesRecepcao.requisicaoRecepcaoFilter.dataFimRequisicaoMarcacao}">
+				</p:calendar>
+			</h:panelGroup>
+		
+			<h:outputLabel value="Prioridade" for="prioridade"/>
+				<h:selectOneRadio id="prioridade"
+				value="#{pesquisaRequisicoesRecepcao.requisicaoRecepcaoFilter.status}">
+				<f:selectItem itemLabel="Normal" itemValue="NORMAL" id="normal" />
+				<f:selectItem itemLabel="Risco de vida" itemValue="RISCODEVIDA" />
+				<f:selectItem itemLabel="Ação Judicial" itemValue="ACAOJUDICIAL" />
+				<f:selectItem itemLabel="Deficiente físico"
+					itemValue="DEFICIENTEFISICO" />
+				<f:selectItem itemLabel="Por idade" itemValue="IDOSO" />
+			</h:selectOneRadio>
+
+
+			<h:outputLabel value="Situação" for="situacao"/>
+				<h:selectOneRadio id="situacao"
+					value="#{pesquisaRequisicoesRecepcao.requisicaoRecepcaoFilter.status_movimento}">
+					<f:selectItem itemLabel="Espera" itemValue="ESPERA"/>
+					<f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
+					<f:selectItem itemLabel="Marcado" itemValue="MARCADO"/>
+				</h:selectOneRadio>
+
+			<p:outputLabel value="Nome Paciente:" for="paciente" />
+			<p:autoComplete id="paciente" maxResults="15"
+				styleClass="complete-producoes" converter="pacienteConverter"
+				placeholder="Pesquisa por nome e cartão SUS"
+				value="#{pesquisaRequisicoesRecepcao.requisicaoRecepcaoFilter.paciente}"
+				completeMethod="#{pesquisaRequisicoesRecepcao.pesquisaPaciente}"
+				var="paciente" itemLabel="#{paciente.nome}" itemValue="#{paciente}"
+				forceSelection="true">
+			</p:autoComplete>
+
+
+			<p:outputLabel value="Estabelecimento de Saúde:" for="unidade" />
+			<p:selectOneMenu id="unidade" styleClass="complete-producoes"
+				value="#{pesquisaRequisicoesRecepcao.requisicaoRecepcaoFilter.unidade}">
+				<f:selectItem itemLabel="-- Selecione Estabelecimento --"
+					noSelectionOption="true" />
+				<f:selectItems value="#{pesquisaRequisicoesRecepcao.listaUnidades}"
+					var="u" itemValue="#{u}" itemLabel="#{u.nome}" />
+			</p:selectOneMenu>
+		</p:panelGrid>
+
+	</div>
+</ui:composition>

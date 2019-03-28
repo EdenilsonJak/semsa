@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmHospital" prependId="false">
+		<p:messages autoUpdate="true" closable="true" />
+
+		<p:toolbar>
+			<p:toolbarGroup>
+				<p:commandButton value="Salvar" icon="salvar-icon" update="frmHospital"
+					action="#{cadastroFornecedorBean.salvarHospital}" />
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<div class="ui-fluid" style="margin-top: 20px">
+			<p:panelGrid columns="4" layout="grid"
+				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="CNPJ" for="cnpj" />
+				<p:inputMask mask="99.999.999/9999-99" size="14" id="cnpj"
+					converter="app.numbersConverter"
+					value="#{cadastroFornecedorBean.fornecedor.cnpj}" required="true">
+				</p:inputMask>
+
+				<p:outputLabel value="Nome Hospital:" for="nome" />
+				<p:inputText id="nome" size="70" maxlength="80" required="true"
+					onkeyup="this.value = this.value.toUpperCase()"
+					value="#{cadastroFornecedorBean.fornecedor.fornecedor}">
+				</p:inputText>
+
+				<p:outputLabel value="CEP" for="cep" />
+				<p:inputMask mask="99.999-999" id="cep" required="true"
+					style="width : 40%" converter="app.numbersConverter"
+					value="#{cadastroFornecedorBean.fornecedor.cep}">
+					<p:ajax event="change" process="@this"
+						listener="#{cadastroFornecedorBean.consultaCep}"
+						update="endereco bairro estado cidade logradouro" />
+				</p:inputMask>
+
+				<p:outputLabel value="Nome Fantasia" for="fantasia" />
+				<p:inputText id="fantasia" size="70"
+					onkeyup="this.value = this.value.toUpperCase()"
+					value="#{cadastroFornecedorBean.fornecedor.fantasia}">
+				</p:inputText>
+
+				<p:outputLabel value="Logradouro" for="logradouro" />
+				<p:inputText id="logradouro" required="true"
+					value="#{cadastroFornecedorBean.fornecedor.tipoLogradouro}"
+					onkeyup="this.value = this.value.toUpperCase()" />
+
+				<p:outputLabel value="Endereço" for="endereco" />
+				<p:inputText id="endereco" size="70" required="true"
+					value="#{cadastroFornecedorBean.fornecedor.logradouro}"
+					onkeyup="this.value = this.value.toUpperCase()" />
+
+				<p:outputLabel value="Número" for="numero" />
+				<p:inputText id="numero" size="5"
+					value="#{cadastroFornecedorBean.fornecedor.numero}" />
+
+				<p:outputLabel value="Bairro" for="bairro" />
+				<p:inputText id="bairro" size="70" required="true"
+					value="#{cadastroFornecedorBean.fornecedor.bairro}"
+					onkeyup="this.value = this.value.toUpperCase()" />
+
+				<p:outputLabel value="Perimetro" for="perimetro" />
+				<p:inputText id="perimetro" size="70"
+					value="#{cadastroFornecedorBean.fornecedor.perimetro}"
+					onkeyup="this.value = this.value.toUpperCase()" />
+
+				<p:outputLabel value="Estado" for="estado" />
+				<p:inputText id="estado"
+					value="#{cadastroFornecedorBean.fornecedor.estado}"
+					onkeyup="this.value = this.value.toUpperCase()" />
+
+				<p:outputLabel value="Cidade" for="cidade" />
+				<p:inputText id="cidade"
+					value="#{cadastroFornecedorBean.fornecedor.cidade}"
+					onkeyup="this.value = this.value.toUpperCase()" />
+
+				<p:outputLabel value="Telefone" for="telefone" />
+				<p:inputMask mask="(99)-9999-9999" id="telefone" size="10"
+					converter="app.numbersConverter"
+					value="#{cadastroFornecedorBean.fornecedor.phone}" />
+
+				<p:outputLabel value="Fax" for="fax" />
+				<p:inputMask mask="(99)-9999-9999" id="fax" size="10"
+					converter="app.numbersConverter"
+					value="#{cadastroFornecedorBean.fornecedor.fax}" />
+
+				<p:outputLabel value="Celular" for="celular" />
+				<p:inputMask mask="(99)-99999-9999" id="celular" size="10"
+					converter="app.numbersConverter"
+					value="#{cadastroFornecedorBean.fornecedor.celular}" />
+
+			</p:panelGrid>
+		</div>
+	</h:form>
+
+
+</ui:composition>

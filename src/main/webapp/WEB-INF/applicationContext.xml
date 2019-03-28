@@ -1,0 +1,107 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<beans:bean id="appUserDetailsService"
+		class="com.ejsistemas.semsa.util.security.AppUserDetailsService" />
+
+	<beans:bean id="exceptionTranslationFilter"
+		class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<beans:property name="accessDeniedHandler" ref="jsfAccessDeniedHandler" />
+		<beans:property name="authenticationEntryPoint" ref="authenticationEntryPoint" />
+	</beans:bean>
+	<beans:bean id="jsfAccessDeniedHandler"
+		class="com.ejsistemas.semsa.util.security.JsfAccessDeniedHandler">
+		<beans:property name="loginPath" value="/AcessoNegado.xhtml" />
+		<beans:property name="contextRelative" value="true" />
+	</beans:bean>
+	<beans:bean id="authenticationEntryPoint"
+		class="com.ejsistemas.semsa.util.security.JsfLoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/Login.xhtml" />
+		<beans:property name="redirectStrategy" ref="jsfRedirectStrategy" />
+	</beans:bean>
+	<beans:bean id="jsfRedirectStrategy"
+		class="com.ejsistemas.semsa.util.security.JsfRedirectStrategy" />
+
+	<http pattern="/Login.xhtml" security="none" />
+	<http pattern="/Erro.xhtml" security="none" />
+	<http pattern="/dialogs/UnidadeOrcamentaria.xhtml" security="none" />
+
+	<http pattern="/javax.faces.resource/**" security="none" />
+
+	<http auto-config="false" use-expressions="true">
+
+		<custom-filter ref="exceptionTranslationFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+		<intercept-url pattern="/Home.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/HomeAlmoxarifado.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/HomeConfiguracao.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/HomeRegulacao.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/HomeRecepcao.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/HomeTesteMenu.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/HomeLicitacao.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/HomePericia.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/HomeVigilancia.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/AcessoNegado.xhtml" access="isAuthenticated()" />
+
+		<!-- INTERCEPTADOR DE PASTAS DE ACESSO POR GRUPOS OU PERFIL COM REFERNCIAS 
+			AO MODULO DO SISTEMA -->
+
+		<intercept-url pattern="/internacao/**"
+			access="hasAnyRole('DIGITADOR - REGULACAO', 'ADMINISTRADOR - REGULACAO',
+					   'SUPERVISOR - REGULACAO', 'VISITANTE - REGULACAO')" />
+					   
+		<intercept-url pattern="/dvs/**"
+			access="hasAnyRole('ADMINISTRADOR - VIGILANCIA', 'DIGITADOR - VIGILANCIA', 'SUPERVISOR - VIGILANCIA',
+				'VISITANTE - VIGILANCIA')" />
+
+
+		<intercept-url pattern="/licitacoes/**"
+			access="hasAnyRole('DIGITADOR - LICITACAO',	'ADMINISTRADOR - LICITACAO',
+					   'SUPERVISOR - LICITACAO', 'VISITANTE - LICITACAO')" />
+
+		<intercept-url pattern="/requisicao/**"
+			access="hasAnyRole('DIGITADOR - REQUISICAO', 'ADMINISTRADOR - REQUISICAO', 
+					   'SUPERVISOR - REQUISICAO', 'VISITANTE - REQUISICAO')" />
+					   
+		<intercept-url pattern="/pericia/**"
+			access="hasAnyRole('DIGITADOR - PERICIA', 'ADMINISTRADOR - PERICIA', 
+					   'SUPERVISOR - PERICIA', 'VISITANTE - PERICIA')" />
+
+		<intercept-url pattern="/recepcao/**"
+			access="hasAnyRole('DIGITADOR - RECEPCAO', 'ADMINISTRADOR - RECEPCAO', 
+					   'SUPERVISOR - RECEPCAO', 'VISITANTE - RECEPCAO')" />
+
+		<intercept-url pattern="/almoxarifado/**"
+			access="hasAnyRole('DIGITADOR - ALMOXARIFADO', 
+					   'ADMINISTRADOR - ALMOXARIFADO', 'SUPERVISOR - ALMOXARIFADO', 'VISITANTE - ALMOXARIFADO')" />
+
+		<intercept-url pattern="/configuracao/**"
+			access="hasAnyRole('ADMINISTRADOR - CONFIGURACAO')" />
+
+		<intercept-url pattern="/**" access="denyALL" />
+
+		<form-login login-page="/Login.xhtml"
+			authentication-failure-url="/Login.xhtml?invalid=true"
+			default-target-url="/" always-use-default-target="true" />
+
+		<!-- <session-management invalid-session-url="/Login.xhtml?sessionExpired=true">
+			<concurrency-control max-sessions="1"
+				error-if-maximum-exceeded="true" expired-url="/Login.xhtml?acessoExcedido=true"/>
+		</session-management> -->
+
+		<logout logout-url="/j_spring_security_logout"
+			invalidate-session="true" 
+			delete-cookies="JSESSIONID"/>
+
+	</http>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="appUserDetailsService">
+			<password-encoder hash="sha" />
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

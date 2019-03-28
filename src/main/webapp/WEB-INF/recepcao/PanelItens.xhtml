@@ -1,0 +1,192 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<h:panelGroup id="prioridadeGroup">
+		<h:outputLabel value="Prioridade" for="prioridade"
+			style="margin-left: 10px;" />
+		<h:selectOneRadio id="prioridade"
+			disabled="#{cadastroRequisicoesRecepcao.flagRadioButton}"
+			value="#{cadastroRequisicoesRecepcao.itensRequisicoes.prioridade_status}">
+			<f:selectItem itemLabel="Normal" itemValue="NORMAL" id="normal" />
+			<f:selectItem itemLabel="Risco de vida" itemValue="RISCODEVIDA" />
+			<f:selectItem itemLabel="Ação Judicial" itemValue="ACAOJUDICIAL" />
+			<f:selectItem itemLabel="Deficiente físico"
+				itemValue="DEFICIENTEFISICO" />
+			<f:selectItem itemLabel="Por idade" itemValue="IDOSO" />
+			<p:ajax listener="#{cadastroRequisicoesRecepcao.prioridadeSelect}" />
+		</h:selectOneRadio>
+	</h:panelGroup>
+
+	<p:outputPanel id="panel">
+		<p:panel header="Requisições"
+			rendered="#{cadastroRequisicoesRecepcao.receituario.pacienteAssociado}">
+
+			<p:panelGrid columns="4" layout="grid" id="grid_panel_judicial_itens"
+				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="Data Requisição" for="data" />
+				<p:calendar id="data" size="6" mask="true" showButtonPanel="true"
+					showOn="button" showTodayButton="true" pattern="dd/MM/yyyy"
+					locale="pt_BR"
+					value="#{cadastroRequisicoesRecepcao.itensRequisicoes.dataRequisicao}">
+				</p:calendar>
+
+				<p:outputLabel value="Tipo Solicitação" for="tp_Solicitacao" />
+				<p:selectOneMenu id="tp_Solicitacao" styleClass="oneMenu"
+					required="true" requiredMessage="Tipo solicitação é obrigatório"
+					value="#{cadastroRequisicoesRecepcao.solicitaoRaiz}">
+					<f:selectItem itemLabel="-- Selecione tipo Solicitacao --"
+						noSelectionOption="true" />
+					<f:selectItems
+						value="#{cadastroRequisicoesRecepcao.solicitacaoRaizes}"
+						var="sRaiz" itemLabel="#{sRaiz.descricao}" itemValue="#{sRaiz}" />
+					<p:ajax
+						listener="#{cadastroRequisicoesRecepcao.carregarSolicitacoesFilhas}"
+						update="solicitacao" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Solicitação" for="solicitacao" />
+				<p:selectOneMenu id="solicitacao" styleClass="oneMenu"
+					required="true" requiredMessage="Campo solicitação é obrigatório"
+					value="#{cadastroRequisicoesRecepcao.itensRequisicoes.solicitacao}">
+					<f:selectItem itemLabel="-- Selecione Solicitacao --"
+						noSelectionOption="true" />
+					<f:selectItems value="#{cadastroRequisicoesRecepcao.solicitacoes}"
+						var="s" itemLabel="#{s.descricao}" itemValue="#{s}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Estabelecimento de Saúde" for="unidade" />
+				<p:autoComplete id="unidade" styleClass="oneMenu" required="true"
+					maxResults="10"
+					requiredMessage="Estabelecimento campo obrigatório." filter="true"
+					value="#{cadastroRequisicoesRecepcao.itensRequisicoes.unidadeSaude}"
+					completeMethod="#{cadastroRequisicoesRecepcao.pesquisarUnidades}"
+					var="unidade" itemLabel="#{unidade.nome}" itemValue="#{unidade}"
+					forceSelection="true">
+				</p:autoComplete>
+
+				<p:outputLabel value="Médico Solicitante:" for="medico" />
+				<p:autoComplete id="medico" styleClass="oneMenu" maxResults="10"
+					converter="medicoConverter"
+					required="true" requiredMessage="Campo Médico é obrigatório"
+					placeholder="Nome do médico ou cartão SUS" dropdown="true"
+					value="#{cadastroRequisicoesRecepcao.itensRequisicoes.medico}"
+					completeMethod="#{cadastroRequisicoesRecepcao.pesquisaMedicos}"
+					var="medico" itemLabel="#{medico.nome}" itemValue="#{medico}"
+					forceSelection="true">
+				</p:autoComplete>
+
+				<p:outputLabel value="Responsável Judicial" for="responsavel"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.prioridadeAcaoJudicial}" />
+				<p:inputText id="responsavel" required="true"
+					onkeyup="this.value = this.value.toUpperCase()"
+					requiredMessage="Nome do responsável judicial é obrigatório"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.prioridadeAcaoJudicial}"
+					value="#{cadastroRequisicoesRecepcao.itensRequisicoes.responsavelJudicial}">
+				</p:inputText>
+
+				<p:outputLabel value="Número do Processo" for="nrProcesso"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.prioridadeAcaoJudicial}" />
+				<p:inputText id="nrProcesso" required="true"
+					requiredMessage="Número processo é obrigatório"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.prioridadeAcaoJudicial}"
+					value="#{cadastroRequisicoesRecepcao.itensRequisicoes.numeroProcesso}">
+				</p:inputText>
+
+				<p:outputLabel value="Data Processo" for="dataprocesso"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.prioridadeAcaoJudicial}" />
+				<p:calendar id="dataprocesso" showButtonPanel="true" size="6"
+					showOn="button" required="true"
+					requiredMessage="Data processo é obrigatório"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.prioridadeAcaoJudicial}"
+					mask="true" pattern="dd/MM/yyyy"
+					value="#{cadastroRequisicoesRecepcao.itensRequisicoes.dataProcesso}">
+				</p:calendar>
+
+			</p:panelGrid>
+
+			<p:tabView styleClass="tabWidget" dynamic="true" effect="clip"
+				id="tabViewItens">
+				<p:tab title="Observação Requisição"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.normal}">
+					<h:panelGroup layout="block" styleClass="ui-fluid form-group">
+						<p:inputTextarea rows="5" style="width: 100%" maxlength="1000"
+							onkeyup="this.value = this.value.toUpperCase()"
+							value="#{cadastroRequisicoesRecepcao.itensRequisicoes.obs}"
+							counter="cont_normal" counterTemplate="{0} Caracteres restantes."
+							disabled="false" id="obs_item_normal">
+						</p:inputTextarea>
+						<h:outputText id="cont_normal" />
+					</h:panelGroup>
+				</p:tab>
+				<p:tab title="Observação Requisição"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.prioridadeAcaoJudicial}">
+					<h:panelGroup layout="block" styleClass="ui-fluid form-group">
+						<p:inputTextarea rows="5" style="width: 100%" maxlength="1000"
+							rendered="true" onkeyup="this.value = this.value.toUpperCase()"
+							value="#{cadastroRequisicoesRecepcao.itensRequisicoes.obs}"
+							counter="cont_judicial"
+							counterTemplate="{0} Caracteres restantes." required="true"
+							disabled="false" id="obs_item_judicial"
+							requiredMessage="Observação para ação judicial é Obrigatório!">
+						</p:inputTextarea>
+						<h:outputText id="cont_judicial" />
+					</h:panelGroup>
+				</p:tab>
+				<p:tab title="Observação Requisição"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.idoso}">
+					<h:panelGroup layout="block" styleClass="ui-fluid form-group">
+						<p:inputTextarea rows="5" style="width: 100%" maxlength="1000"
+							onkeyup="this.value = this.value.toUpperCase()"
+							value="#{cadastroRequisicoesRecepcao.itensRequisicoes.obs}"
+							counter="cont_idoso" counterTemplate="{0} Caracteres restantes."
+							required="true" disabled="false" id="obs_item_idoso"
+							requiredMessage="Observação para idoso é Obrigatório!">
+						</p:inputTextarea>
+						<h:outputText id="cont_idoso" />
+					</h:panelGroup>
+				</p:tab>
+				<p:tab title="Observação Requisição"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.deficienteFisico}">
+					<h:panelGroup layout="block" styleClass="ui-fluid form-group">
+						<p:inputTextarea rows="5" style="width: 100%" maxlength="1000"
+							onkeyup="this.value = this.value.toUpperCase()"
+							value="#{cadastroRequisicoesRecepcao.itensRequisicoes.obs}"
+							counter="cont_deficiente"
+							counterTemplate="{0} Caracteres restantes." required="true"
+							disabled="false" id="obs_item_deficiente"
+							requiredMessage="Observação para deficiente físico é Obrigatório!">
+						</p:inputTextarea>
+						<h:outputText id="cont_deficiente" />
+					</h:panelGroup>
+				</p:tab>
+				<p:tab title="Observação Requisição"
+					rendered="#{cadastroRequisicoesRecepcao.itensRequisicoes.riscodeVida}">
+					<h:panelGroup layout="block" styleClass="ui-fluid form-group">
+						<p:inputTextarea rows="5" style="width: 100%" maxlength="1000"
+							onkeyup="this.value = this.value.toUpperCase()"
+							value="#{cadastroRequisicoesRecepcao.itensRequisicoes.obs}"
+							counter="cont_riscodeVida"
+							counterTemplate="{0} Caracteres restantes." required="true"
+							disabled="false" id="obs_item_riscodeVida"
+							requiredMessage="Observação para risco de vida é Obrigatório!">
+						</p:inputTextarea>
+						<h:outputText id="cont_riscodeVida" />
+					</h:panelGroup>
+				</p:tab>
+			</p:tabView>
+
+			
+
+
+		</p:panel>
+	</p:outputPanel>
+
+
+
+</ui:composition>

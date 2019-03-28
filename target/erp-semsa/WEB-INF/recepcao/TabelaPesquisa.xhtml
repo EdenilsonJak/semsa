@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+
+	<p:dataTable id="dataItem" rowIndexVar="linha" style="margin-top: 10px"
+		var="itens" emptyMessage="Nenhuma requisiçao registrada."
+		value="#{pesquisaRequisicoesRecepcao.listaFilter}" paginator="true"
+		rows="15">
+		<f:facet name="header">
+					Consulta de Requisiçoes.
+			</f:facet>
+		<p:column headerText="Data Entrada"
+			style="width : 70px; text-align : center">
+			<h:outputText value="#{itens.receituario.data}" id="data">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm"
+					timeZone="#{appBean.timeZone}" />
+			</h:outputText>
+			<p:tooltip id="toolUser" for="data" position="bottom">
+				<h:outputText
+					value="Usuário responsável: #{itens.receituario.usuarioEntrada.nome}" />
+			</p:tooltip>
+		</p:column>
+
+		<p:column headerText="Nome do Paciente" style="width : 190px">
+			<h:outputText value="#{itens.receituario.paciente.nome}" />
+		</p:column>
+		<p:column headerText="Estabelecimento de Saúde" style="width : 190px">
+			<h:outputText value="#{itens.unidadeSaude.nome}" />
+		</p:column>
+		<p:column headerText="Médico Solicitante" style="width : 190px">
+			<h:outputText value="#{itens.medico.nome}" />
+		</p:column>
+		<p:column headerText="Solicitação"
+			style="width : 150px; text-align : center ">
+			<h:outputText
+				value="#{itens.solicitacao.solicitaPai.descricao} - #{itens.solicitacao.descricao}" />
+		</p:column>
+		<p:column headerText="Prioridade"
+			style="width : 100px; text-align : center">
+			<h:outputText value="#{itens.prioridade_status.descricao}"
+				rendered="#{itens.riscodeVida}" style="color : red" />
+			<h:outputText value="#{itens.prioridade_status.descricao}"
+				rendered="#{itens.idoso}" style="color : orange" />
+			<h:outputText value="#{itens.prioridade_status.descricao}"
+				rendered="#{itens.prioridadeAcaoJudicial}" style="color : green" />
+			<h:outputText value="#{itens.prioridade_status.descricao}"
+				rendered="#{itens.deficienteFisico}" style="color : purple" />
+			<h:outputText value="#{itens.prioridade_status.descricao}"
+				rendered="#{itens.normal}" style="color : null" />
+		</p:column>
+		<p:column headerText="Situação"
+			style="width : 90px; text-align : center">
+			<h:outputText value="#{itens.movimento_status.descricao}"
+				id="userMarcado" rendered="#{itens.marcado}" />
+			<p:tooltip for="userMarcado">
+				<h:outputText value="#{itens.usuarioMarcacao.nome}" />
+			</p:tooltip>
+			<h:outputText value="#{itens.movimento_status.descricao}"
+				id="userCancelado" rendered="#{itens.cancelado}" />
+			<p:tooltip for="userCancelado">
+				<h:outputText value="#{itens.usuarioCancela.nome}" />
+			</p:tooltip>
+			<h:outputText value="#{itens.movimento_status.descricao}"
+				rendered="#{itens.espera}" />
+		</p:column>
+		<p:column headerText="Ações" style="text-align:center; width : 120px">
+			<p:commandButton title="Visualizar" icon="pesquisar-icon"
+				oncomplete="PF('requisicaoDialog').show()" immediate="true"
+				update=":frmPesquisa:dialogRequisicao" process="@this">
+				<p:resetInput target=":frmPesquisa:dialogRequisicao" />
+				<f:setPropertyActionListener value="#{itens}"
+					target="#{pesquisaRequisicoesRecepcao.itemRequisicao}" />
+			</p:commandButton>
+
+			<p:commandButton title="Cancelar" icon="cancelar-icon" 
+				disabled="#{!seguranca.permissaoAcoesRecepcao || itens.cancelado}"
+				oncomplete="PF('requisicaoDialogCancelar').show()" immediate="true"
+				update=":frmDialogCancelaRequisicao:requisicaoDialogCancelar"
+				process="@this">
+				<p:resetInput
+					target=":frmDialogCancelaRequisicao:requisicaoDialogCancelar" />
+				<f:setPropertyActionListener value="#{itens}"
+					target="#{cancelamentoRequisicaoRecepcao.itemReceituario}" />
+			</p:commandButton>
+			<p:commandButton title="Remarcar" icon="atualizar-icon"
+				disabled="#{itens.espera}" rendered="#{seguranca.permissaoAcoesRecepcao}"
+				oncomplete="PF('remarcarReceituario').show()" immediate="true"
+				process="@this" update="remarcarReceituario">
+				<f:setPropertyActionListener value="#{itens}"
+					target="#{remarcarItemReceituarioRecepcao.itemReceituario}" />
+			</p:commandButton>
+		</p:column>
+
+
+		<f:facet name="footer">
+			<h:outputText value="Total de " />
+			<h:outputText
+				value="#{fn:length(pesquisaRequisicoesRecepcao.listaFilter)}" />
+			<h:outputText value=" entradas de requisições" />
+		</f:facet>
+	</p:dataTable>
+</ui:composition>

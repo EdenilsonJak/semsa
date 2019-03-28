@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<p:dialog showEffect="drop" hideEffect="clip" height="300"
+		header="Cancelar requisição" widgetVar="requisicaoDialogCancelar"
+		id="requisicaoDialogCancelar" resizable="false" responsive="true">
+		<p:messages autoUpdate="false" closable="true" id="msgCancelaRequisicao"/>
+		
+		<h:panelGroup id="requisicaoDialogCancelaPanel">
+
+			<p:outputLabel value="Situação: " style="font-weight: bold;" />
+			<h:outputText
+				value="#{cancelamentoRequisicaoRecepcao.itemReceituario.movimento_status.descricao}" />
+
+			<p:spacer height="10" />
+
+			<p:outputLabel value="Prioridade: " style="font-weight: bold;" />
+			<h:outputText
+				value="#{cancelamentoRequisicaoRecepcao.itemReceituario.prioridade_status.descricao}"
+				rendered="#{cancelamentoRequisicaoRecepcao.itemReceituario.riscodeVida}"
+				style="color : red" />
+			<h:outputText
+				value="#{cancelamentoRequisicaoRecepcao.itemReceituario.prioridade_status.descricao}"
+				rendered="#{cancelamentoRequisicaoRecepcao.itemReceituario.idoso}"
+				style="color : orange" />
+			<h:outputText
+				value="#{cancelamentoRequisicaoRecepcao.itemReceituario.prioridade_status.descricao}"
+				rendered="#{cancelamentoRequisicaoRecepcao.itemReceituario.prioridadeAcaoJudicial}"
+				style="color : green" />
+			<h:outputText
+				value="#{cancelamentoRequisicaoRecepcao.itemReceituario.prioridade_status.descricao}"
+				rendered="#{cancelamentoRequisicaoRecepcao.itemReceituario.deficienteFisico}"
+				style="color : purple" />
+			<h:outputText
+				value="#{cancelamentoRequisicaoRecepcao.itemReceituario.prioridade_status.descricao}"
+				rendered="#{cancelamentoRequisicaoRecepcao.itemReceituario.normal}"
+				style="color : null" />
+		</h:panelGroup>
+
+
+
+		<div class="ui-fluid" style="margin-top: 5px;">
+			<p:outputPanel id="panel_paciente">
+				<p:panel header="Dados do paciente">
+
+					<p:panelGrid columns="4" layout="grid" id="grid_panel_paciente"
+						columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Nome Paciente:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{cancelamentoRequisicaoRecepcao.itemReceituario.receituario.paciente.nome}" />
+
+						<p:outputLabel value="Mãe:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{cancelamentoRequisicaoRecepcao.itemReceituario.receituario.paciente.nome_mae}" />
+
+						<p:outputLabel value="Cartão SUS:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{cancelamentoRequisicaoRecepcao.itemReceituario.receituario.paciente.sus}" />
+
+						<p:outputLabel value="Data de Nascimento:"
+							style="font-weight: bold;" />
+						<h:outputText
+							value="#{cancelamentoRequisicaoRecepcao.itemReceituario.receituario.paciente.dt_nascimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+					</p:panelGrid>
+
+				</p:panel>
+			</p:outputPanel>
+		</div>
+
+		<div class="ui-fluid" style="margin-top: 5px; margin-bottom: 5px">
+
+			<p:outputPanel id="panel_estabelecimento">
+				<p:panel header="Dados do estabelecimento">
+
+					<p:panelGrid columns="4" layout="grid"
+						id="grid_panel_estabelecimento"
+						columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Unidade de Saúde:"
+							style="font-weight: bold;" />
+						<h:outputText
+							value="#{cancelamentoRequisicaoRecepcao.itemReceituario.unidadeSaude.nome}">
+						</h:outputText>
+
+						<p:outputLabel value="Médico Solicitante"
+							style="font-weight: bold;" />
+						<h:outputText
+							value="#{cancelamentoRequisicaoRecepcao.itemReceituario.medico.nome}">
+						</h:outputText>
+
+						<p:outputLabel value="Solicitação:" style="font-weight: bold;" />
+						<h:outputText
+							value="#{cancelamentoRequisicaoRecepcao.itemReceituario.solicitacao.solicitaPai.descricao} - #{cancelamentoRequisicaoRecepcao.itemReceituario.solicitacao.descricao}">
+						</h:outputText>
+
+					</p:panelGrid>
+
+				</p:panel>
+			</p:outputPanel>
+		</div>
+
+
+
+		<div class="ui-fluid"
+			style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+
+			<p:outputPanel id="panelObsCancela">
+				<p:panel header="Observações">
+
+					<p:outputLabel value="Obs:" for="obs" />
+					<p:inputTextarea rows="5" style="width : 100%" maxlength="1000"
+						required="true" requiredMessage="Obserção é obrigatório" id="obs"
+						value="#{cancelamentoRequisicaoRecepcao.itemReceituario.obs_cancelar}"
+						counter="cont_obs" counterTemplate="{0} Caracteres restantes.">
+					</p:inputTextarea>
+					<h:outputText id="cont_obs" />
+
+				</p:panel>
+			</p:outputPanel>
+
+
+		</div>
+
+		<p:commandButton value="Cancelar" process="requisicaoDialogCancelar"
+			icon="check-icon"
+			disabled="#{not seguranca.permissaoAcoesRecepcao}"
+			update="msgCancelaRequisicao panelObsCancela :frmPesquisa:dataItem"
+			oncomplete="if(args.sucesso == true) PF('requisicaoDialogCancelar').hide()"
+			action="#{cancelamentoRequisicaoRecepcao.salvarCancelamento}"
+			onblur="PF('myWidgetVar').filter()" />
+
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,182 @@
+<ui:composition template="/WEB-INF/template/LayoutRegulacao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<ui:define name="head">
+		Detalhe de Internação
+	</ui:define>
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<o:viewParam name="internacao"
+				value="#{cadastroInternaBean.internacao}" />
+		</f:metadata>
+		<h:form id="frmRecepcao" prependId="false">
+		
+		<p:outputPanel id="panel_paciente">
+		<p:panel header="Dados do Paciente">
+			
+		<div class="ui-fluid"
+		style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+		<p:panelGrid columns="4" layout="grid" id="grid_panel_paciente"
+			columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+			styleClass="panelgrid-noborder">	
+			
+				<p:outputLabel value="Nome do Paciente:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.nome}"/>
+				
+				<p:outputLabel value="Nome da Mãe:"/>
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.nome_mae}"/>
+			
+				<p:outputLabel value="Data de Nascimento:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.dt_nascimento}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+				
+				<p:outputLabel value="Cartão Sus:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.sus}"/>
+				
+				<p:outputLabel value="Logradouro:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.tipoLogradouro}"/>
+				
+				<p:outputLabel value="Endereço:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.logradouro}"/>
+				
+				<p:outputLabel value="Número:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.numero}"/>
+				
+				<p:outputLabel value="Bairro:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.bairro}"/>
+				
+				<p:outputLabel value="Cep:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.cep}"/>
+				
+				<p:outputLabel value="Cidade e Estado:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.paciente.cidade} - #{cadastroInternaBean.internacao.paciente.uf}"/>
+									
+		</p:panelGrid>
+		</div>
+		
+		</p:panel>
+		</p:outputPanel>	
+		
+		<br/>
+		
+		<p:outputPanel id="panel_internacao">
+		<p:panel header="Dados da Internação">
+			
+		<div class="ui-fluid"
+		style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+		<p:panelGrid columns="4" layout="grid" id="grid_panel_internacao"
+			columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+			styleClass="panelgrid-noborder">	
+			
+				<p:outputLabel value="Chave de Controle:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.cod_controle}.#{cadastroInternaBean.internacao.id}"/>
+			
+				<p:outputLabel value="Data/Hora Internação:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.dataInternacao}">
+					<format:LocalDateTimeConverter pattern="dd/MM/yyyy HH:mm" />
+				</h:outputText>
+				
+				<p:outputLabel value="Data/Hora Alta:" rendered="#{cadastroInternaBean.internacao.alta}"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.dataAlta}" rendered="#{cadastroInternaBean.internacao.alta}">
+					<format:LocalDateTimeConverter pattern="dd/MM/yyyy HH:mm" />
+				</h:outputText>
+									
+				<p:outputLabel value="Motivo Alta:" rendered="#{cadastroInternaBean.internacao.alta}"/>
+				<h:outputText value="#{cadastroInternaBean.internacao.motivo}" rendered="#{cadastroInternaBean.internacao.alta}"/>		
+				
+				
+				<p:outputLabel value="Data/Hora Cancelamento:" rendered="#{cadastroInternaBean.internacao.cancelado}"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.dataCancelamento}" rendered="#{cadastroInternaBean.internacao.cancelado}">
+					<format:LocalDateTimeConverter pattern="dd/MM/yyyy HH:mm" />
+				</h:outputText>
+				
+				<p:outputLabel value="Motivo Cancelamento:" rendered="#{cadastroInternaBean.internacao.cancelado}"/>
+				<h:outputText value="#{cadastroInternaBean.internacao.motivo}" rendered="#{cadastroInternaBean.internacao.cancelado}"/>		
+			
+				<p:outputLabel value="Estabelecimento:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.leito.hospital.fornecedor}"/>
+			
+				<p:outputLabel value="Clínica:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.leito.clinica.nome}">
+				</h:outputText>
+				
+				<p:outputLabel value="Leito:"/>
+				<h:outputText value="#{cadastroInternaBean.internacao.leito.nome}"/>
+											
+		</p:panelGrid>
+		</div>
+		
+		</p:panel>
+		</p:outputPanel>
+		
+		<br/>
+		
+		<p:outputPanel id="panel_dados_complementares">
+		<p:panel header="Dados Complementares">
+			
+		<div class="ui-fluid"
+		style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+		<p:panelGrid columns="4" layout="grid" id="grid_panel_dados_complementares"
+			columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+			styleClass="panelgrid-noborder">	
+			
+				<p:outputLabel value="Cid10:"/>			
+				<h:outputText value="#{cadastroInternaBean.internacao.cid.descrabrev}"/>				
+											
+		</p:panelGrid>
+		</div>
+		
+		<div class="ui-fluid"
+		style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+		<p:panelGrid columns="1" layout="grid" id="grid_panel_obs_internacao"
+			columnClasses="ui-grid-col-12"
+			styleClass="panelgrid-noborder">	
+					
+				<p:outputLabel value="Obs Internação:"/>
+				<p:inputTextarea value="#{cadastroInternaBean.internacao.obs_interncao}"/>		
+				
+											
+		</p:panelGrid>
+		</div>
+		
+		<div class="ui-fluid" style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+		<p:panelGrid columns="1" layout="grid" id="grid_panel_obs_alta" rendered="#{cadastroInternaBean.internacao.alta}"
+			columnClasses="ui-grid-col-12"
+			styleClass="panelgrid-noborder">	
+					
+				<p:outputLabel value="Obs Alta:"/>
+				<p:inputTextarea value="#{cadastroInternaBean.internacao.obs_alta}"/>		
+				
+											
+		</p:panelGrid>
+		</div>
+		
+		<div class="ui-fluid" style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #dddddd">
+		<p:panelGrid columns="1" layout="grid" id="grid_panel_obs_cancela" rendered="#{cadastroInternaBean.internacao.cancelado}"
+			columnClasses="ui-grid-col-12"
+			styleClass="panelgrid-noborder">	
+					
+				<p:outputLabel value="Obs Cancelamento:"/>
+				<p:inputTextarea value="#{cadastroInternaBean.internacao.obs_cancela}"/>		
+				
+											
+		</p:panelGrid>
+		</div>
+		
+		</p:panel>
+		</p:outputPanel>		
+			
+		</h:form>
+
+	</ui:define>
+</ui:composition>

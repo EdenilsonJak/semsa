@@ -1,0 +1,212 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<f:metadata>
+		<f:viewAction action="#{pesquisaInternacaoBean.inicializar}"/>
+	</f:metadata>
+
+	<h:form id="frmConsultaInternacao">
+		<p:messages autoUpdate="true" closable="true" />
+		<p:toolbar>
+			<p:toolbarGroup>
+				<p:commandButton value="Pesquisar" icon="pesquisar-icon"
+					action="#{pesquisaInternacaoBean.pesquisar}" update="@form" />
+			</p:toolbarGroup>
+			<p:toolbarGroup align="right">
+				<p:button value="Novo" icon="novo-icon"
+					outcome="/internacao/Internacao" />
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<div class="ui-fluid" style="margin-top: 20px">
+			<p:panelGrid columns="2" id="painel" layout="grid"
+				columnClasses="ui-grid-col-2, ui-grid-col-4"
+				styleClass="panelgrid-noborder">
+				<p:outputLabel value="Hospital:" for="hospital" />
+				<p:selectOneMenu id="hospital" styleClass="complete-hospital" converter="fornecedorConverter"
+					value="#{pesquisaInternacaoBean.internacaoFilter.hospital}">
+					<f:selectItem itemLabel="-- Selecione Hospital --"
+						noSelectionOption="true" />
+					<f:selectItems value="#{pesquisaInternacaoBean.fornecedors}"
+						var="f" itemValue="#{f}" itemLabel="#{f.fornecedor}" />
+				</p:selectOneMenu>
+
+
+				<p:outputLabel value="Clínica:" for="clinica" />
+				<p:selectOneMenu id="clinica"
+					value="#{pesquisaInternacaoBean.internacaoFilter.clinica}">
+					<f:selectItem itemLabel="-- Selecione Clínica --"
+						noSelectionOption="true" />
+					<f:selectItems value="#{pesquisaInternacaoBean.clinicas}" var="c"
+						itemValue="#{c}" itemLabel="#{c.nome}" />
+					<p:ajax process="@this"
+						listener="#{pesquisaInternacaoBean.listarLeitosPorClinica}"
+						update="leito" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Leitos:" for="leito" />
+				<p:selectOneMenu id="leito"
+					value="#{pesquisaInternacaoBean.internacaoFilter.leito}">
+					<f:selectItem itemLabel="-- Selecione Leito --"
+						noSelectionOption="true" />
+					<f:selectItems value="#{pesquisaInternacaoBean.leitos}" var="l"
+						itemLabel="#{l.nome}" itemValue="{l}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Paciente:" for="paciente" />
+				<p:autoComplete id="paciente" dropdown="false" maxResults="15"
+					converter="pacienteConverter"
+					value="#{pesquisaInternacaoBean.internacaoFilter.paciente}"
+					placeholder="Pesquise por nome ou cartão sus"
+					completeMethod="#{pesquisaInternacaoBean.completarPaciente}"
+					var="paciente" itemLabel="#{paciente.nome}" itemValue="#{paciente}"
+					forceSelection="true" queryDelay="1000">
+					<p:column>
+						<h:outputText value="#{paciente.nome}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{paciente.dt_nascimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{paciente.sus}" />
+					</p:column>
+				</p:autoComplete>
+
+
+			</p:panelGrid>
+		</div>
+
+		<p:dataTable id="internacoesTable" var="internacao"
+			style="margin-top: 20px" selectionMode="single"
+			rowIndexVar="rowIndex" reflow="true"
+			emptyMessage="Nenhum paciente encontrado." rows="20" paginator="true"
+			value="#{pesquisaInternacaoBean.internacoes}"
+			paginatorAlwaysVisible="false" paginatorPosition="bottom"
+			selection="#{pesquisaInternacaoBean.internacao}"
+			rowKey="#{internacao.id}">
+			<f:facet name="header">
+					Histórico de primeira internação
+			</f:facet>
+			<p:ajax event="rowSelect" listener="#{pesquisaInternacaoBean.onSelect}"
+				update=":tabPanelWidget:frmConsultaInternacao" />
+			<p:column headerText="Chave Internação:" style="width : 115px">
+				<h:outputText value="#{internacao.controle}" />
+			</p:column>
+			<p:column headerText="Hospital:" style="width : 300px">
+				<h:outputText value="#{internacao.leito.hospital.fornecedor}" />
+			</p:column>
+			<p:column headerText="Clínica:" style="width : 150px">
+				<h:outputText value="#{internacao.leito.clinica.nome}" />
+			</p:column>
+			<p:column headerText="Leito:" style="width : 150px">
+				<h:outputText value="#{internacao.leito.nome}" />
+			</p:column>
+			<p:column headerText="Paciente:" style="width : 300px">
+				<h:outputText value="#{internacao.paciente.nome}" />
+			</p:column>
+			<p:column headerText="Nascimento:"
+				style="text-align : center; width : 115px">
+				<h:outputText value="#{internacao.paciente.dt_nascimento}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Data Internação:"
+				style="text-align : center; width : 130px">
+				<h:outputText value="#{internacao.dataInternacao}" id="data">
+					<format:LocalDateTimeConverter pattern="dd/MM/yyyy HH:mm:ss" />
+				</h:outputText>
+				<p:tooltip id="toolUser" for="data" position="bottom">
+					<h:outputText value="Usuário responsavel: #{internacao.usuario.nome}"/>
+				</p:tooltip>
+			</p:column>
+			<p:column headerText="Alta/Transf/Cancelar:"
+				style="text-align : center; width : 130px">
+				<h:outputText value="#{internacao.dataAlta}">
+					<format:LocalDateTimeConverter pattern="dd/MM/yyyy HH:mm:ss" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Situação/Internação:"
+				style="text-align : center; width : 130px">
+				<h:outputText value="#{internacao.status}" id="status" />
+				<p:tooltip id="toolCancelado" for="status" rendered="#{internacao.cancelado and seguranca.usuarioResponsavelRegulacao}">
+					<h:outputText value="Usuário cancelador: #{internacao.usuarioCancelador.nome}"/>
+				</p:tooltip>
+				<p:tooltip id="toolAlta" for="status" rendered="#{internacao.alta and seguranca.usuarioResponsavelRegulacao}">
+					<h:outputText value="Responsável pela alta: #{internacao.usuarioAlta.nome}"/>
+				</p:tooltip>
+			</p:column>
+			
+			<f:facet name="footer">
+				<h:outputText value="Pesquisa retornou "/>
+				<h:outputText value="#{fn:length(pesquisaInternacaoBean.internacoes)}"/>
+				<h:outputText value=" registro."/>
+			</f:facet>
+		</p:dataTable>
+
+		<p:spacer></p:spacer>
+
+		<p:panel id="panelHistorico" header="Histórico de transferências"
+			style="text-align:left"
+			rendered="#{pesquisaInternacaoBean.existeHistorico}">
+
+			<p:dataTable id="transferenciaTable" var="transferencia"
+				value="#{pesquisaInternacaoBean.transferencias}"
+				style="margin-top: 20px"
+				emptyMessage="Nenhuma transferência encontrada." rows="5"
+				rowIndexVar="rowIndex" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom">
+				
+				<p:column headerText="Chave Internação:" style="width : 115px">
+					<h:outputText value="#{transferencia.controle}" />
+				</p:column>
+				
+				<p:column headerText="Hospital:" style="width : 300px">
+					<h:outputText value="#{transferencia.leito.hospital.fornecedor}" />
+				</p:column>
+				<p:column headerText="Clínica:" style="width : 150px">
+					<h:outputText value="#{transferencia.leito.clinica.nome}" />
+				</p:column>
+				<p:column headerText="Leito:" style="width : 150px">
+					<h:outputText value="#{transferencia.leito.nome}" />
+				</p:column>
+				<p:column headerText="Data Internação:"
+					style="text-align : center; width : 130px">
+					<h:outputText value="#{transferencia.dataInternacao}" id="transferencia">
+						<format:LocalDateTimeConverter pattern="dd/MM/yyyy HH:mm:ss" />
+					</h:outputText>
+					<p:tooltip id="toolUser" for="transferencia" position="bottom" rendered="#{seguranca.usuarioResponsavelRegulacao}">
+					<h:outputText value="Usuário responsavel: #{transferencia.usuario.nome}"/>
+				</p:tooltip>
+				</p:column>
+				<p:column headerText="Alta/Transf/Cancelar:"
+					style="text-align : center; width : 130px">
+					<h:outputText value="#{transferencia.dataAlta}">
+						<format:LocalDateTimeConverter pattern="dd/MM/yyyy HH:mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Situação/Internação:"
+					style="text-align : center; width : 130px">
+					<h:outputText value="#{transferencia.status}" id="statusHistorico" />
+					<p:tooltip id="toolCanceladoHistorico" for="statusHistorico" rendered="#{transferencia.cancelado and seguranca.usuarioResponsavelRegulacao}">
+					<h:outputText value="Usuário cancelador: #{transferencia.usuarioCancelador.nome}" />
+					</p:tooltip>
+					<p:tooltip id="toolAlta" for="statusHistorico" rendered="#{transferencia.alta and seguranca.usuarioResponsavelRegulacao}">
+					<h:outputText value="Responsável pela alta: #{transferencia.usuarioAlta.nome}"/>
+				</p:tooltip>
+				</p:column>
+			</p:dataTable>
+
+
+		</p:panel>
+
+	</h:form>
+
+</ui:composition>

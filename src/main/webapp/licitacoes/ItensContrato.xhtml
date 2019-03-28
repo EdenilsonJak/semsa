@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable value="#{cadastroLicitacaoBean.licitacao.itens}"
+		var="item" rowIndexVar="linha" id="tabelaItens">
+
+		<p:column headerText="Produto" style="width : 350px">
+			<h:outputText value="#{item.produto.nome}"
+				rendered="#{item.produtoAssociado}" />
+			<p:autoComplete styleClass="produto-tabela" id="produto"
+				value="#{cadastroLicitacaoBean.produtoLinhaEditavel}"
+				completeMethod="#{cadastroLicitacaoBean.completarProduto}"
+				var="produto" itemLabel="#{produto.nome}" itemValue="#{produto}"
+				forceSelection="true" rendered="#{not item.produtoAssociado}">
+				<p:ajax event="itemSelect" process="@this quantidade vlr"
+					listener="#{cadastroLicitacaoBean.carregarProdutoLinhaEditavel}"
+					update="tabelaItens :frmCadastroLicitacao:totalLicitacao"/>
+				
+			</p:autoComplete>
+		</p:column>
+
+		<p:column headerText="Quantidade"
+			style="text-align: center; width: 100px">
+			<p:inputText size="7" value="#{item.quantidade}" id="quantidade"
+				disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}">
+				<p:ajax event="keyup" process="@this vlr produto"
+					update="tabelaItens :frmCadastroLicitacao:totalLicitacao"
+					listener="#{cadastroLicitacaoBean.atualizarQuantidade(item, linha)}"/>
+			</p:inputText>
+		</p:column>
+
+		<p:column headerText="Valor Unitário"
+			style="text-align: rigth; width: 120px">
+			<p:inputText value="#{item.vlrUnitario}" id="vlr" size="12"
+				onfocus="maskMoney(this)" disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}">
+				<p:ajax event="keyup" process="@this quantidade produto"
+					update="tabelaItens :frmCadastroLicitacao:totalLicitacao"
+					listener="#{cadastroLicitacaoBean.recalcularLicitacao}" />
+				<f:convertNumber pattern="#,##0.00" />
+			</p:inputText>
+		</p:column>
+
+		<p:column headerText="Valor total"
+			style="text-align: rigth; width: 100px">
+			<h:outputText value="#{item.valorTotal}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Saldo"
+			style="text-align: center; width: 100px">
+			<p:inputText size="7" value="#{item.quantidadeEstoque}" id="estoque"
+				disabled="true">
+			</p:inputText>
+		</p:column>
+
+	</p:dataTable>
+
+</ui:composition>

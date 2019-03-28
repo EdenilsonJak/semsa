@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<h:head>
+		<f:facet name="first">
+			<meta charset="UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1" />
+		</f:facet>
+	
+		<title>ERP - SEMSA</title>
+	
+		<h:outputStylesheet library="ejsistemas" name="styles/custom.css" />
+		<h:outputStylesheet library="ejsistemas" name="styles/layout.css" />
+		<h:outputStylesheet library="ejsistemas" name="styles/components.css" />
+		<h:outputStylesheet library="ejsistemas" name="styles/font-awesome.min.css"/>
+	
+	
+	
+		<h:outputScript target="body" library="primefaces"
+			name="jquery/jquery.js" />
+		<h:outputScript target="body" library="ejsistemas"
+			name="javascripts/app.js" />
+	
+	</h:head>
+	
+	<h:body>
+		<p:ajaxStatus styleClass="ajax-status">
+			<f:facet name="start">
+				<h:graphicImage library="ejsistemas/images" name="wait.gif" />
+			</f:facet>
+			<f:facet name="complete">
+				<h:outputText value="" />
+			</f:facet>
+		</p:ajaxStatus>
+		<header class="aw-topbar">
+			<h:link outcome="/Home">
+				<h:graphicImage name="images/logo.png" library="ejsistemas" />
+			</h:link>
+				
+				<label for="chk" class="teste-toggle"><i class="fa fa-bars"/></label>
+			
+			<div style="float: right; margin-right: 30px">
+				<span
+					style="float: left; height: 47px; line-height: 47px; margin-right: 30px">
+					<p:link value="Sair" href="/j_spring_security_logout" style="color: #ffffff;" />
+				</span>
+			</div>
+		</header>
+			<input type="checkbox" id="chk" name="chk"/>
+		<nav class="menu" id="principal">
+			<ul>
+				<li><a href="#sub">Cadastro Básicos <span>+</span></a></li>
+				<li><a href="#">Registro e Internações <span>+</span></a></li>
+			</ul>
+		</nav>
+		
+		<nav class="menu" id="sub">
+			<ul>
+				<li><a href="" class="voltar">Voltar</a></li>
+				<li><a href="#">Cadastro Médico</a></li>
+				<li><a href="#">Cadastro de Pacientes</a></li>
+			</ul>
+		</nav>
+	
+		<section class="aw-content  js-content">
+			<h2 class="aw-page-title">
+				<ui:insert name="head" />
+			</h2>
+			<ui:insert name="content" />
+			<div class="usuario-logado">
+				<h4>Usuário Logado:  #{seguranca.nomeUsuario}!</h4>
+			</div>
+			<footer class="rodape">
+				<div class="social-icons">
+					<a href="https://twitter.com/edenilsonjak" target="_blank"><i class="fa fa-twitter"></i></a>
+					<a href="https://br.linkedin.com/in/edenilson-mendonça-dos-santos-05575a37
+					" target="_blank"><i class="fa fa-linkedin"></i></a>
+					<a href="#"><i class="fa fa-instagram"></i></a>
+					<a href="http://google.com" target="_blank"><i class="fa fa-google"></i></a>
+					<p class="copyright">
+						Copyrigth @ EJ Sistemas - 2016. Todos os direitos reservados.
+					</p>
+				</div>
+			</footer>
+		</section>
+	
+	</h:body>
+
+</html>

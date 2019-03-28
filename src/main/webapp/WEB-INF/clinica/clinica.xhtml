@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+
+	<f:metadata>
+		<o:viewParam name="clinica" value="#{cadastroClinicaBean.clinica}" />
+
+		<f:event listener="#{cadastroClinicaBean.inicializar}"
+			type="preRenderView"></f:event>
+	</f:metadata>
+
+	<h:form id="frmClinica" prependId="false">
+		<p:messages autoUpdate="true" closable="true" />
+
+		<p:toolbar>
+			<p:toolbarGroup>
+				<p:button value="Novo" icon="novo-icon"
+					outcome="/internacao/clinica/CadastroClinica" />
+				<p:commandButton value="Salvar" icon="salvar-icon"
+					action="#{cadastroClinicaBean.salvar}" id="botaoSalvar"
+					update="@form" />
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<div class="ui-fluid" style="margin-top: 20px">
+			<p:panelGrid columns="4" layout="grid"
+				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="Nome Clínica:" for="nome" />
+				<p:inputText id="nome" size="70" maxlength="80" required="true" requiredMessage="Nome Clínca é obrigatório"
+					onkeyup="this.value = this.value.toUpperCase()"
+					value="#{cadastroClinicaBean.clinica.nome}"> 
+				</p:inputText>
+
+			</p:panelGrid>
+		</div>
+
+		<p:dataTable id="clinicasTable" var="clinica"
+			value="#{cadastroClinicaBean.clinicas}" style="margin-top: 20px"
+			emptyMessage="Nenhum clínica encontrado." rows="20" paginator="true"
+			paginatorAlwaysVisible="false" paginatorPosition="bottom">
+			<f:facet name="header">
+					Lista de Clínicas
+			</f:facet>
+			<p:column headerText="Nome Clínica">
+				<h:outputText value="#{clinica.nome}" />
+			</p:column>
+
+			<p:column headerText="Data Cadastro" style="text-align: center">
+				<h:outputText value="#{clinica.dataCriacao}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+			<f:facet name="footer">
+				<h:outputText value="Existem "/>
+				<h:outputText value="#{fn:length(cadastroClinicaBean.clinicas)}"/>
+				<h:outputText value=" Cadastradas."/>
+			</f:facet>
+		</p:dataTable>
+
+	</h:form>
+
+
+</ui:composition>

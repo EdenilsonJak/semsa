@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:format="http://ejsistemas.com.br/LocalDateTimeConverter">
+
+	<p:outputPanel id="panel">
+		<p:panel header="Dados paciente">
+
+			<p:panelGrid columns="4" layout="grid" id="grid_panel_paciente"
+				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="Paciente:" for="paciente" />
+				<p:autoComplete id="paciente" maxResults="10"
+					converter="pacienteConverter"
+					placeholder="Pesquisa por nome e cartão SUS" required="true"
+					requiredMessage="Selecione um paciente, por favor!"
+					value="#{cadastroDemandaPericiaBean.pericia.paciente}"
+					completeMethod="#{cadastroDemandaPericiaBean.pesquisaPaciente}"
+					var="paciente" itemLabel="#{paciente.nome}" itemValue="#{paciente}"
+					forceSelection="true">
+					<p:ajax event="itemSelect" process="@this" update="msg"
+						listener="#{cadastroDemandaPericiaBean.atualizarComponente}" />
+					<p:column>
+						<h:outputText value="#{paciente.nome}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{paciente.dt_nascimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{paciente.sus}" />
+					</p:column>
+				</p:autoComplete>
+
+<!-- 				<p:outputLabel value="Data de Nascimento" for="datanascimento"
+					rendered="#{cadastroDemandaPericiaBean.pericia.pacieneAssociado}" />
+				<p:calendar size="6" mask="true" disabled="true"
+					pattern="dd/MM/yyyy" locale="pt_BR" id="datanascimento"
+					rendered="#{cadastroDemandaPericiaBean.pericia.pacieneAssociado}"
+					value="#{cadastroDemandaPericiaBean.pericia.paciente.dt_nascimento}">
+				</p:calendar>
+
+				<p:outputLabel value="Nome Mãe"
+					rendered="#{cadastroDemandaPericiaBean.pericia.pacieneAssociado}" />
+				<p:inputText
+					rendered="#{cadastroDemandaPericiaBean.pericia.pacieneAssociado}"
+					value="#{cadastroDemandaPericiaBean.pericia.paciente.nome_mae}"
+					disabled="true" />
+
+				<p:outputLabel value="Cartão SUS"
+					rendered="#{cadastroDemandaPericiaBean.pericia.pacieneAssociado}" />
+				<p:inputText
+					rendered="#{cadastroDemandaPericiaBean.pericia.pacieneAssociado}"
+					value="#{cadastroDemandaPericiaBean.pericia.paciente.sus}"
+					disabled="true" /> -->
+			</p:panelGrid>
+
+		</p:panel>
+	</p:outputPanel>
+
+</ui:composition>

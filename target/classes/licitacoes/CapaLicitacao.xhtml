@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="4" layout="grid"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+		styleClass="panelgrid-noborder">
+		<p:outputLabel value="Chave:"
+			rendered="#{cadastroLicitacaoBean.licitacao.existente}" />
+		<p:inputText value="#{cadastroLicitacaoBean.licitacao.id}"
+			disabled="true"
+			rendered="#{cadastroLicitacaoBean.licitacao.existente}" />
+
+		<p:outputLabel value="Data Cadastro:"
+			rendered="#{cadastroLicitacaoBean.licitacao.existente}" />
+		<p:calendar pattern="dd/MM/yyyy"
+			value="#{cadastroLicitacaoBean.licitacao.dataLicitacao}"
+			rendered="#{cadastroLicitacaoBean.licitacao.existente}"
+			disabled="true" />
+
+		<p:outputLabel value="Status:" />
+		<h:outputText
+			value="#{cadastroLicitacaoBean.licitacao.status.descricao}" />
+
+		<p:outputLabel value="Número do Processo:" for="numeroProcesso" />
+		<p:inputText id="numeroProcesso"
+			value="#{cadastroLicitacaoBean.licitacao.nr_processo}"
+			disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}" />
+
+		<p:outputLabel value="Fornecedor" for="fornecedor" />
+		<p:selectOneMenu id="fornecedor" styleClass="oneMenu"
+			value="#{cadastroLicitacaoBean.licitacao.fornecedor}" required="true"
+			requiredMessage="Fornecedor é obrigatório"
+			disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}">
+			<f:selectItem itemLabel="-- Selecione Fornecedor --"
+				noSelectionOption="true" />
+			<f:selectItems value="#{cadastroLicitacaoBean.fornecedores}"
+				var="fornecedor" itemValue="#{fornecedor}"
+				itemLabel="#{fornecedor.fornecedor}" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="Modalidade Licitação:" for="modalidade" />
+		<p:selectOneMenu id="modalidade" styleClass="oneMenu"
+			value="#{cadastroLicitacaoBean.licitacao.modalidade}" required="true"
+			requiredMessage="Modalidade é campo obrigatório"
+			disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}">
+			<f:selectItem itemLabel="-- Selecione Modalidade --" noSelectionOption="true"/>
+			<f:selectItems value="#{cadastroLicitacaoBean.modalidades}"
+				var="modalidade" itemValue="#{modalidade}"
+				itemLabel="#{modalidade.nm_modalidade}" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="Tipo de Licitação:" for="tipoLicitacao" />
+		<p:selectOneMenu id="tipoLicitacao" styleClass="oneMenu"
+			value="#{cadastroLicitacaoBean.licitacao.tipolicitacao}"
+			disabled="#{cadastroLicitacaoBean.licitacao.naoAlteravel}">
+			<f:selectItem itemLabel="-- Selecione Tipo Licitacao --" noSelectionOption="true"/>
+			<f:selectItems value="#{cadastroLicitacaoBean.tipoLicitacoes}"
+				var="tipoLicitacao" itemValue="#{tipoLicitacao}"
+				itemLabel="#{tipoLicitacao.nome}" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="Total do Contrato:"
+			style="font-weight: bold; font-size: 1.1em" />
+		<h:outputText value="#{cadastroLicitacaoBean.licitacao.valor_global}"
+			style="font-weight: bold; font-size: 1.1em" id="totalLicitacao">
+			<f:convertNumber type="currency" />
+		</h:outputText>
+
+	</p:panelGrid>
+</ui:composition>
